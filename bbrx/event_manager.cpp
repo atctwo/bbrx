@@ -8,6 +8,7 @@
 #include "config.h"
 
 int16_t speed_limit = 60; // this is the amount by which the top speed (forwards + backwards) is reduced; when this is 0, max speed is 180
+bool brake = false;
 
 #define LOG_TAG "events"
 
@@ -62,19 +63,39 @@ void register_binding(bb_action action, bb_event event, int32_t min, int32_t max
 }
 
 /**
+ * @brief Apply a deadzone to a controller input
+ * 
+ * @param input the current value of the input
+ * @param dead the minimum input value to not be considered 0 (both + and -)
+ * @param beef the maximum input value to not be considered max (both + and -)
+ * @param min the minimum value of the range of inputs
+ * @param max the maximum value of the range of inputs
+ * @return int32_t 
+ */
+int32_t deadzone(int32_t input, int32_t dead, int32_t beef, int32_t min, int32_t max) {
+    if (input > -dead && input < dead) input = 0;
+    if (input > beef)                  input = max;
+    if (input < -beef)                 input = -max;
+    // float ch1_out = ( (float)-input / 4.0 ) + 128.0;
+    // input += max;
+
+    return input;
+}
+
+/**
  * @brief Determine the current value of a given input event
  * 
  * @param event the event to get the value of
  * @param controller a pointer to the controller object to get the value of
  * @return int32_t 
  */
-int32_t get_event_value(bb_event event, ControllerPtr controller) {
+int32_t get_event_value(bb_event event, ControllerPtr controller, int32_t min, int32_t max) {
 
     switch(event) {
-        case BB_EVENT_ANALOG_LX:            return controller->axisX();
-        case BB_EVENT_ANALOG_LY:            return controller->axisY();
-        case BB_EVENT_ANALOG_RX:            return controller->axisRX();
-        case BB_EVENT_ANALOG_RY:            return controller->axisRY();
+        case BB_EVENT_ANALOG_LX:            return deadzone(controller->axisX(), DEADZONE_LX, BEEFZONE_LX, min, max);
+        case BB_EVENT_ANALOG_LY:            return deadzone(controller->axisY(), DEADZONE_LY, BEEFZONE_LY, min, max);
+        case BB_EVENT_ANALOG_RX:            return deadzone(controller->axisRX(), DEADZONE_LX, BEEFZONE_LX, min, max);
+        case BB_EVENT_ANALOG_RY:            return deadzone(controller->axisRY(), DEADZONE_LY, BEEFZONE_LY, min, max);
         case BB_EVENT_ANALOG_BRAKE:         return controller->brake();
         case BB_EVENT_ANALOG_THROTTLE:      return controller->throttle();
         case BB_EVENT_GYRO_X:               return controller->gyroX();
@@ -125,7 +146,7 @@ int32_t get_event_value(bb_event event, ControllerPtr controller) {
  */
 void perform_action(bb_action action, int32_t event_value, int32_t min, int32_t max, uint8_t pin) {
 
-    int32_t out;
+    int32_t out, input;
 
     switch(action) {
         case BB_ACTION_TEST:
@@ -144,7 +165,9 @@ void perform_action(bb_action action, int32_t event_value, int32_t min, int32_t 
             logd(LOG_TAG, "servo out: raw: %d, scaled: %d", event_value, out);
             
             // write channel output
-            servos[pin].write(out);
+            if (brake) servos[pin].writeMicroseconds(ESC_PWM_MID);
+            else       servos[pin].writeMicroseconds(out);
+
 
             break;
 
@@ -155,6 +178,13 @@ void perform_action(bb_action action, int32_t event_value, int32_t min, int32_t 
             break;
 
         case BB_ACTION_BREAK:
+
+            input = (event_value > ((max - min) / 2) + min);
+            if (!brake && input) logi(LOG_TAG, "Breaking!");
+            if (brake && !input) logi(LOG_TAG, "Stepping off the breaks...");
+
+            brake = input;
+
             break;
 
         default:
@@ -190,7 +220,7 @@ void event_manager_update() {
         for (binding bind : bindings) {
 
             // determine the event value from the event type
-            int32_t event_value = get_event_value(bind.event, controller);
+            int32_t event_value = get_event_value(bind.event, controller, bind.min, bind.max);
 
             // perform the action
             perform_action(bind.action, event_value, bind.min, bind.max, bind.pin);

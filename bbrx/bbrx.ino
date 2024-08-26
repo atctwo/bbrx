@@ -23,11 +23,9 @@ void setup() {
     // setup event manager and hardware needed by actions
     event_manager_setup();
 
-    register_binding(BB_ACTION_TEST, BB_EVENT_BTN_A, 0, 1, 0);
-    register_binding(BB_ACTION_TEST, BB_EVENT_BTN_B, 0, 1, 1);
-    register_binding(BB_ACTION_TEST, BB_EVENT_BTN_X, 0, 1, 2);
-    register_binding(BB_ACTION_TEST, BB_EVENT_BTN_Y, 0, 1, 3);
 
+    register_binding(BB_ACTION_TEST, BB_EVENT_BTN_B, 0, 1, 1);
+    register_binding(BB_ACTION_BREAK, BB_EVENT_BTN_A, 0, 1);
     register_binding(BB_ACTION_SERVO, BB_EVENT_ANALOG_LY, -512, 512, PIN_OUT_CH1);
     register_binding(BB_ACTION_SERVO, BB_EVENT_ANALOG_LX, -512, 512, PIN_OUT_CH2);
 }

@@ -12,7 +12,8 @@ This is a list of all the planned features of bbrx.
 - [ ] On-board WS2812 status
 - [x] Dynamic pin config (in config.h for each channel you specify which input to react to somehow)
 - [ ] make sure that only one event can call an action at a time
-- [ ] fix deadzones
+- [x] fix deadzones
+- [ ] add deadzones to other analog inputs
 - [ ] Weapon control using L2 / R2
 - [ ] Documentation
 

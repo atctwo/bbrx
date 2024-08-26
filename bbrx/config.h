@@ -5,6 +5,7 @@
 
 // ESC PWM settings
 #define ESC_PWM_MIN             1000    // minimum pulse width in µs
+#define ESC_PWM_MID             1500    // half-way pulse width in µs
 #define ESC_PWM_MAX             2000    // maximum pulse width in µs
 #define ESC_PWM_FREQ            50      // pwm frequency in Hz
 
