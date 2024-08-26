@@ -3,7 +3,7 @@ This is a list of all the planned features of bbrx.
 
 - [x] ESC input
 - [x] Make sure it works with most ESCs
-- [ ] Git repo
+- [x] Git repo
 - [x] replace `Servo::write()` with `Servo::writeMicroseconds()` and define min + max pulse width in config.h
 - [x] PWM frequency in config.h
 - [ ] Variable max speed
