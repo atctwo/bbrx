@@ -9,11 +9,11 @@
 #define ESC_PWM_FREQ            50      // pwm frequency in Hz
 
 //  Bot Control Settings
-#define DEADZONE_LY             32
-#define BEEFZONE_LY             500
-#define DEADZONE_LX             32
-#define BEEFZONE_LX             500
+#define DEADZONE_LY             32      // inner deadzone for the left analog stick y axis
+#define BEEFZONE_LY             500     // outer deadzone for the left analog stick y axis
+#define DEADZONE_LX             32      // inner deadzone for the left analog stick x axis
+#define BEEFZONE_LX             500     // outer deadzone for the left analog stick x axis
 
 // Pin Definitions
-#define PIN_OUT_CH1             12
-#define PIN_OUT_CH2             13
+#define PIN_OUT_CH1             12      // pin to use for PWM channel 1 output
+#define PIN_OUT_CH2             13      // pin to use for PWM channel 2 output

@@ -10,6 +10,11 @@ This is a list of all the planned features of bbrx.
 - [ ] Failsafes
 - [ ] Feedback (eg: led colour, rumble)
 - [ ] On-board WS2812 status
-- [ ] Dynamic pin config (in config.h for each channel you specify which input to react to somehow)
+- [x] Dynamic pin config (in config.h for each channel you specify which input to react to somehow)
+- [ ] make sure that only one event can call an action at a time
+- [ ] fix deadzones
 - [ ] Weapon control using L2 / R2
 - [ ] Documentation
+
+# Future Ideas :thinking:
+- dynamically load bindings from an SD card
