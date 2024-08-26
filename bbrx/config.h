@@ -3,6 +3,11 @@
 //  General System Stuff
 #define VERSION_STRING          "v1.0"
 
+// ESC PWM settings
+#define ESC_PWM_MIN             1000    // minimum pulse width in µs
+#define ESC_PWM_MAX             2000    // maximum pulse width in µs
+#define ESC_PWM_FREQ            50      // pwm frequency in Hz
+
 //  Bot Control Settings
 #define DEADZONE_LY             32
 #define BEEFZONE_LY             500

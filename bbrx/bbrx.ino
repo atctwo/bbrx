@@ -28,10 +28,10 @@ void setup() {
 	ESP32PWM::allocateTimer(1);
 	ESP32PWM::allocateTimer(2);
 	ESP32PWM::allocateTimer(3);
-	OutputCh1.setPeriodHertz(490);    // standard 50 hz servo
-    OutputCh1.attach(PIN_OUT_CH1, 1000, 2000);
-    OutputCh2.setPeriodHertz(490);    // standard 50 hz servo
-    OutputCh2.attach(PIN_OUT_CH2, 1000, 2000);
+	OutputCh1.setPeriodHertz(ESC_PWM_FREQ);
+    OutputCh1.attach(PIN_OUT_CH1, ESC_PWM_MIN, ESC_PWM_MAX);
+    OutputCh2.setPeriodHertz(ESC_PWM_FREQ);
+    OutputCh2.attach(PIN_OUT_CH2, ESC_PWM_MIN, ESC_PWM_MAX);
 }
 
 void loop() {
