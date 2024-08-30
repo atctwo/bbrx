@@ -66,11 +66,21 @@ void controller_handle(std::function<void(ControllerPtr controller)> callback) {
     BP32.update();
 
     // if controller is connected
-    if (controller != nullptr) {
+    if (controller_connected()) {
 
         // call callback
         callback(controller);
 
     }
+
+}
+
+bool controller_connected() {
+
+    // this should return true if >=1 controller is connected.  bbrx only supports
+    // one controller at a time for now, so really this function returns true if
+    // The Controller is connected
+    
+    return (controller != nullptr);
 
 }
