@@ -142,29 +142,29 @@ int32_t get_event_value(bb_event event, ControllerPtr controller, int32_t min, i
  * @param max maximum value of the range of possible inputs
  * @param pin which pin to use as output (optional)
  */
-void perform_action(bb_action action, int32_t event_value, int32_t min, int32_t max, uint8_t pin) {
+void perform_action(int32_t event_value, binding bind) {
 
     int32_t out, input;
 
-    switch(action) {
+    switch(bind.action) {
         case BB_ACTION_TEST:
 
             // map input to boolean
             // logi(LOG_TAG, "value=%d\tout=%d", event_value, map(event_value, min, max, 0, 1));
-            if (event_value > ((max - min) / 2) + min) {
-                logi(LOG_TAG, "event manager test!!! pin=%d", pin);
+            if (event_value > ((bind.max - bind.min) / 2) + bind.min) {
+                logi(LOG_TAG, "event manager test!!! pin=%d", bind.pin);
             }
 
             break;
 
         case BB_ACTION_SERVO:
 
-            out = map(event_value, min, max, ESC_PWM_MIN, ESC_PWM_MAX);
+            out = map(event_value, bind.min, bind.max, ESC_PWM_MIN, ESC_PWM_MAX);
             logd(LOG_TAG, "servo out: raw: %d, scaled: %d", event_value, out);
             
             // write channel output
-            if (brake) servos[pin].writeMicroseconds(ESC_PWM_MID);
-            else       servos[pin].writeMicroseconds(out);
+            if (brake) servos[bind.pin].writeMicroseconds(ESC_PWM_MID);
+            else       servos[bind.pin].writeMicroseconds(out);
 
 
             break;
@@ -177,7 +177,7 @@ void perform_action(bb_action action, int32_t event_value, int32_t min, int32_t 
 
         case BB_ACTION_BREAK:
 
-            input = (event_value > ((max - min) / 2) + min);
+            input = (event_value > ((bind.max - bind.min) / 2) + bind.min);
             if (!brake && input) logi(LOG_TAG, "Breaking!");
             if (brake && !input) logi(LOG_TAG, "Stepping off the breaks...");
 
@@ -186,7 +186,7 @@ void perform_action(bb_action action, int32_t event_value, int32_t min, int32_t 
             break;
 
         default:
-            logw(LOG_TAG, "Tried to call unsupported action (action=%d)", action);
+            logw(LOG_TAG, "Tried to call unsupported action (action=%d)", bind.action);
     }
 
 }
@@ -232,7 +232,7 @@ void event_manager_update() {
             // perform the action if controller is connected, or exec without controller is enabled for this binding
             if ((controller != nullptr) || bind.exec_without_controller) {
                 // logi(LOG_TAG, "acting value=%d", event_value);
-                perform_action(bind.action, event_value, bind.min, bind.max, bind.pin);
+                perform_action(event_value, bind);
             }
 
         }
