@@ -8,6 +8,8 @@ bbrx allows users to "bind" **receiver actions** to zero or more **gamepad event
 - bind DpadDown to Max Speed Decrease
 - bind X to Break
 
+There are a number of ways in which each binding can be configured, since different actions will require different parameters based on input.  This document explains (in maybe too much detail) what each parameter does, how it works, and how to consider what values you might need in your case.
+
 ## Input Range
 Each binding specifies a minimum and maximum range that the value of gamepad events can be.  In most cases, the standard range of an input should be provided for each binding, in order to make full use of the input.  Sometimes, however, it can be useful to provide a custom range, to change how the input's value is interpreted.  
 
@@ -34,6 +36,17 @@ To demonstrate these concepts, here are a few examples:
 - For servo channel 1, it's most common to bind the Ch1 action to the Left Analog Y event.  To make full use of the Y axis' range, `min` should be -512 and `max` should be +512
 - Say you had a spinning weapon motor which takes standard PWM servo input on Ch3.  One fun control scheme would be to bind Ch3 to R2 (assuming it's an analog trigger), with `min=-1023` and `max=1023`.  You would have full control over the motor with R2.  (Remember that the range is twice as big as analog triggers provide so that the default position is always in the middle).  
 Now, consider what would happen if you made another bind, from Ch3 to *L2*, with `min=-1023` and `max=1023`.  This would provide the same range as the first bind, but since the range is flipped the motor will run backwards!  This allows you to control the rotation *and direction* of the motor, where L2 makes the motor spin one way and R2 makes it spin the other!
+
+## What happens when no controllers are connected?
+When the event manager runs each binding, and there aren't any controllers connected, it does one of two things depending on the value of the binding parameter `exec_without_controller`:
+
+### `exec_without_controller` is false
+In this case, the bound action simply won't be executed if there isn't any connected controller.  If the action affects some state when it is called, that state will remain unchanged once the controller is disconnected.  For example, if you have an action bound to pull some GPIO pin high in response to a button being pressed, and the button is pressed when the controller disconnects, the action won't be called but the GPIO pin will still be high!
+
+Normally this would be a huge issue for motors; if your controller runs out of battery when the device is in motion, and `exec_without_controller` is false for the motor binding, the motors will just keep going!  However, there's a failsafe in place which means that *all* motors will stop when no controller is connected.  For more info, check the [failsafe documentation](./failsafes.md#kill-motors-when-no-controllers-are-connected).
+
+### `exec_without_controller` is true (default)
+In this case, the bound action will be executed irrespective of how many controllers are connected.  Since there's no controller to provide an input value for the action, a default of 0 is assumed.  This is an appropriate value for most cases, but in future versions there might be a way to provide a custom default for each binding.
 
 # Implementation
 To implement this, each supported receiver action implements a standard function prototype:

@@ -17,15 +17,12 @@ bool brake = false;
  * 
  */
 struct binding {
-    bb_action action;
-    bb_event  event;
-    int32_t   min;
-    int32_t   max;
-    uint8_t   pin;
-    // some variable for analog input -> digital action, which specifies
-    // positive or negative (ie: resolve as true if the value is 
-    // greater than (pos) or less than (neg) the range midpoint).
-    // probably doesn't matter for analog actions
+    bb_action action;                       // the receiver action to perform when the event occurs
+    bb_event  event;                        // the event to which the action should respond
+    int32_t   min;                          // minimum value of the range of possible inputs
+    int32_t   max;                          // maximum value of the range of possible inputs
+    uint8_t   pin;                          // which pin to use as output
+    bool      exec_without_controller;      // whether to execute the action if a controller isn't connected (with event value = 0)
 };
 
 /**
@@ -48,8 +45,9 @@ std::map<uint8_t, Servo> servos;
  * @param min minimum value of the range of possible inputs
  * @param max maximum value of the range of possible inputs
  * @param pin which pin to use as output (optional)
+ * @param exec_without_controller whether to execute the action if a controller isn't connected (with event value = 0) (optional)
  */
-void register_binding(bb_action action, bb_event event, int32_t min, int32_t max, uint8_t pin) {
+void register_binding(bb_action action, bb_event event, int32_t min, int32_t max, uint8_t pin, bool exec_without_controller) {
     
     // if a pin is registered for a servo action, create a servo object for that pin
     Servo *servo = new Servo();
@@ -58,7 +56,7 @@ void register_binding(bb_action action, bb_event event, int32_t min, int32_t max
     servos[pin] = *servo;
 
     // register binding
-    binding b = {action, event, min, max, pin};
+    binding b = {action, event, min, max, pin, exec_without_controller};
     bindings.push_back(b);
 }
 
@@ -219,11 +217,22 @@ void event_manager_update() {
         // for each binding
         for (binding bind : bindings) {
 
-            // determine the event value from the event type
-            int32_t event_value = get_event_value(bind.event, controller, bind.min, bind.max);
+            // variable for storing value of the bound event
+            int32_t event_value = 0;
 
-            // perform the action
-            perform_action(bind.action, event_value, bind.min, bind.max, bind.pin);
+            // if controller is connected
+            if (controller != nullptr) {
+
+                // determine the event value from the event type
+                event_value = get_event_value(bind.event, controller, bind.min, bind.max);
+
+            }
+            // otherwise assume the default of 0
+
+            // perform the action if controller is connected, or exec without controller is enabled for this binding
+            if ((controller != nullptr) || bind.exec_without_controller) {
+                perform_action(bind.action, event_value, bind.min, bind.max, bind.pin);
+            }
 
         }
 

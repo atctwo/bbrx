@@ -58,6 +58,7 @@ void controller_setup() {
     logi(LOG_TAG, "Setting up Bluepad32");
     logi(LOG_TAG, "BP32 version: %s", BP32.firmwareVersion());
     BP32.setup(&controller_callback_connected, &controller_callback_disconnected);
+    logi(LOG_TAG, "Listening for controllers...");
 }
 
 void controller_handle(std::function<void(ControllerPtr controller)> callback) {
@@ -65,13 +66,9 @@ void controller_handle(std::function<void(ControllerPtr controller)> callback) {
     // update bluepad32
     BP32.update();
 
-    // if controller is connected
-    if (controller_connected()) {
-
-        // call callback
-        callback(controller);
-
-    }
+    // call callback
+    // note: callback must check if controller is nullptr!!!
+    callback(controller);
 
 }
 
@@ -80,7 +77,7 @@ bool controller_connected() {
     // this should return true if >=1 controller is connected.  bbrx only supports
     // one controller at a time for now, so really this function returns true if
     // The Controller is connected
-    
+
     return (controller != nullptr);
 
 }

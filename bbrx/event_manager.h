@@ -68,6 +68,6 @@ enum bb_event {
     BB_EVENT_MISC_BATTERY
 };
 
-void register_binding(bb_action action, bb_event event, int32_t min, int32_t max, uint8_t pin=0);
+void register_binding(bb_action action, bb_event event, int32_t min, int32_t max, uint8_t pin=0, bool exec_without_controller=true);
 void event_manager_setup();
 void event_manager_update();
