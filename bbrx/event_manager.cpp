@@ -227,33 +227,6 @@ void event_manager_update() {
 
         }
 
-        // // read left stick y axis
-        // int32_t ly = controller->axisY();
-        // if (ly > -DEADZONE_LY && ly < DEADZONE_LY) ly = 0;
-        // if (ly > BEEFZONE_LY)                      ly = 512;
-        // if (ly < -BEEFZONE_LY)                     ly = -512;
-        // // float ch1_out = ( (float)-ly / 4.0 ) + 128.0;
-        // ly += 512;
-        // int32_t ch1_out = map(ly, 0, 1024, speed_limit, 180-speed_limit);
-        // logd(LOG_TAG, "ly raw: %d, scaled: %d", ly, ch1_out);
-        
-        // // write channel 1 output
-        // OutputCh1.write(ch1_out);
-
-
-        // // read left stick x axis
-        // int32_t lx = controller->axisX();
-        // if (lx > -DEADZONE_LX && lx < DEADZONE_LX) lx = 0;
-        // if (lx > BEEFZONE_LX)                      lx = 512;
-        // if (lx < -BEEFZONE_LX)                     lx = -512;
-        // lx += 512;
-        // int32_t ch2_out = map(1024 - lx, 0, 1024, speed_limit, 180-speed_limit);
-        // logd(LOG_TAG, "lx raw: %d, scaled: %d", lx, ch2_out);
-        
-        // // write channel 1 output
-        // OutputCh2.write(ch2_out);
-
-
     });
 
 }
