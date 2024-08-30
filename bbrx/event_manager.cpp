@@ -142,7 +142,7 @@ int32_t get_event_value(bb_event event, ControllerPtr controller, int32_t min, i
  * @param max maximum value of the range of possible inputs
  * @param pin which pin to use as output (optional)
  */
-void perform_action(int32_t event_value, binding bind) {
+void perform_action(int32_t event_value, binding bind, ControllerPtr controller=nullptr) {
 
     int32_t out, input;
 
@@ -159,7 +159,7 @@ void perform_action(int32_t event_value, binding bind) {
 
         case BB_ACTION_SERVO:
 
-            out = map(event_value, bind.min, bind.max, ESC_PWM_MIN, ESC_PWM_MAX);
+            out = map(event_value, bind.min, bind.max, ESC_PWM_MIN + speed_limit, ESC_PWM_MAX - speed_limit);
             logd(LOG_TAG, "servo out: raw: %d, scaled: %d", event_value, out);
             
             // write channel output
@@ -170,9 +170,19 @@ void perform_action(int32_t event_value, binding bind) {
             break;
 
         case BB_ACTION_SPEED_UP:
+            if (event_value > ((bind.max - bind.min) / 2) + bind.min) {
+                speed_limit--;
+                if (speed_limit < 0) speed_limit = 0;
+                logi(LOG_TAG, "Decreasing speed restriction to %d", speed_limit);
+            }
             break;
 
         case BB_ACTION_SPEED_DOWN:
+            if (event_value > ((bind.max - bind.min) / 2) + bind.min) {
+                speed_limit++;
+                if (speed_limit > (ESC_PWM_MAX-ESC_PWM_MIN)/2) speed_limit = (ESC_PWM_MAX-ESC_PWM_MIN)/2;
+                logi(LOG_TAG, "Increasing speed restriction to %d", speed_limit);
+            }
             break;
 
         case BB_ACTION_BREAK:
@@ -232,7 +242,7 @@ void event_manager_update() {
             // perform the action if controller is connected, or exec without controller is enabled for this binding
             if ((controller != nullptr) || bind.exec_without_controller) {
                 // logi(LOG_TAG, "acting value=%d", event_value);
-                perform_action(event_value, bind);
+                perform_action(event_value, bind, controller);
             }
 
         }

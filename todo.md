@@ -6,7 +6,7 @@ This is a list of all the planned features of bbrx.
 - [x] Git repo
 - [x] replace `Servo::write()` with `Servo::writeMicroseconds()` and define min + max pulse width in config.h
 - [x] PWM frequency in config.h
-- [ ] Variable max speed
+- [x] Variable max speed
 - [ ] Failsafes
 - [ ] Failsafe Documentation (.md)
 - [ ] Feedback (eg: led colour, rumble)
@@ -15,8 +15,10 @@ This is a list of all the planned features of bbrx.
 - [ ] make sure that only one event can call an action at a time
 - [x] fix deadzones
 - [ ] add deadzones to other analog inputs
-- [ ] fix max speed control
 - [ ] Weapon control using L2 / R2
+- [ ] load bindings from config.h
+- [ ] add dpad events
+- [ ] event repeat timing
 - [ ] Documentation
 
 # Future Ideas :thinking:
