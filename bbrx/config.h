@@ -9,6 +9,12 @@
 #define ESC_PWM_MAX             2000    // maximum pulse width in µs
 #define ESC_PWM_FREQ            50      // pwm frequency in Hz
 
+// failsafes
+// you can globally disable all failsafes by commenting out ENABLE_FAILSAFES,
+// or you can disable specific failsafes by uncommenting their specific define
+#define ENABLE_FAILSAFES                // when defined, failsafes will be enabled.  PLEASE DON'T DISABLE THIS UNLESS YOU REALLY REALLY REALLY NEED TO!!!!!!!PLEASE
+#define FAILSAFE_NO_CONTROLLER          // enables the failsafe where if no controllers are detected, the motors will be killed
+
 //  Bot Control Settings
 #define DEADZONE_LY             32      // inner deadzone for the left analog stick y axis
 #define BEEFZONE_LY             500     // outer deadzone for the left analog stick y axis

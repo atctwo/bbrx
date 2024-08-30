@@ -8,7 +8,7 @@
 #include "config.h"
 
 int16_t speed_limit = 60; // this is the amount by which the top speed (forwards + backwards) is reduced; when this is 0, max speed is 180
-bool brake = false;
+bool brake = false;       // if true, then all servos will stop
 
 #define LOG_TAG "events"
 
@@ -231,6 +231,7 @@ void event_manager_update() {
 
             // perform the action if controller is connected, or exec without controller is enabled for this binding
             if ((controller != nullptr) || bind.exec_without_controller) {
+                // logi(LOG_TAG, "acting value=%d", event_value);
                 perform_action(bind.action, event_value, bind.min, bind.max, bind.pin);
             }
 
@@ -238,5 +239,21 @@ void event_manager_update() {
 
     });
 
-}
+    // if no controllers are connected
+    if (!controller_connected()) {
 
+        // Failsafe: kill motors when nothing is connected
+        #if defined(ENABLE_FAILSAFES) and defined(FAILSAFE_NO_CONTROLLER)
+
+            // for each servo {don't}
+            for (auto it = servos.begin(); it != servos.end(); ++it) {
+
+                // write midpoint value to each servo motor (ie: turn it off)
+                it->second.writeMicroseconds(ESC_PWM_MID);
+            }
+
+        #endif
+
+    }
+
+}
