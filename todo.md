@@ -19,7 +19,7 @@ This is a list of all the planned features of bbrx.
 - [ ] load bindings from config.h
 - [ ] add dpad events
 - [ ] event repeat timing
-- [ ] print controller info on connect
+- [x] print controller info on connect
 - [ ] Documentation
 
 # Future Ideas :thinking:

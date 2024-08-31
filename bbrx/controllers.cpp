@@ -20,6 +20,8 @@ void controller_callback_connected(ControllerPtr ctl) {
 
         // print controller info
         logi(LOG_TAG, "Connected to a controller!");
+        logi(LOG_TAG, "  - model:   %s", ctl->getModelName().c_str());
+        logi(LOG_TAG, "  - battery: %d%%", (ctl->battery() / 255) * 100);
 
         ControllerProperties properties = ctl->getProperties();
         logd(LOG_TAG,
@@ -36,6 +38,9 @@ void controller_callback_connected(ControllerPtr ctl) {
     }
     else {
         logw(LOG_TAG, "Attempted to connect to new controller, but couldn't because already connected to a different one");
+
+        // disconnect the new gamepad so it knows it's not actually doing anything
+        ctl->disconnect();
     }
 
 }
