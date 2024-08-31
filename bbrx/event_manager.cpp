@@ -21,6 +21,7 @@ struct binding {
     bb_event  event;                        // the event to which the action should respond
     int32_t   min;                          // minimum value of the range of possible inputs
     int32_t   max;                          // maximum value of the range of possible inputs
+    int32_t   default_value;                // the default / neural position value for the event (for when no controller is connected and detecting when inputs are neutral)
     uint8_t   pin;                          // which pin to use as output
     bool      exec_without_controller;      // whether to execute the action if a controller isn't connected (with event value = 0)
 };
@@ -56,7 +57,7 @@ void register_binding(bb_action action, bb_event event, int32_t min, int32_t max
     servos[pin] = *servo;
 
     // register binding
-    binding b = {action, event, min, max, pin, exec_without_controller};
+    binding b = {action, event, min, max, 0, pin, exec_without_controller};
     bindings.push_back(b);
 }
 
@@ -228,7 +229,7 @@ void event_manager_update() {
         for (binding bind : bindings) {
 
             // variable for storing value of the bound event
-            int32_t event_value = 0;
+            int32_t event_value = bind.default_value;
 
             // if controller is connected
             if (controller != nullptr) {
@@ -237,7 +238,7 @@ void event_manager_update() {
                 event_value = get_event_value(bind.event, controller, bind.min, bind.max);
 
             }
-            // otherwise assume the default of 0
+            // otherwise assume the default
 
             // perform the action if controller is connected, or exec without controller is enabled for this binding
             if ((controller != nullptr) || bind.exec_without_controller) {
