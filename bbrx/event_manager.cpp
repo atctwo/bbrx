@@ -24,6 +24,7 @@ struct binding {
     int32_t   default_value;                // the default / neural position value for the event (for when no controller is connected and detecting when inputs are neutral)
     uint8_t   pin;                          // which pin to use as output
     bool      exec_without_controller;      // whether to execute the action if a controller isn't connected (with event value = 0)
+    bool      ignore_claims;                // if true, execute the bound action even if it is claimed by another binding
 };
 
 /**
@@ -33,10 +34,41 @@ struct binding {
 std::vector<binding> bindings;
 
 /**
- * @brief Vector to hold Servo objects for each pin which is used for servo output
+ * @brief Map to hold Servo objects for each pin which is used for servo output
  * 
  */
 std::map<uint8_t, Servo> servos;
+
+/**
+ * @brief Map to keep track of whether each action is claimed by which binding
+ * 
+ * The value for this map is a pair, where the first element is a boolean indicating whether
+ * the action has been claimed, and the second element is the ID of the binding
+ * which has claimed it.
+ * 
+ * The structure of this map is as follows:
+ * 
+ * action_claims (map)
+ * ├── key: action (bb_action)
+ * └── value: (map) of each action to each pin
+ *     ├── key: pin number (uint8_t)
+ *     └── value: (pair) with claim info
+ *         ├── first: whether there is a claim for this action on this pin (bool)
+ *         └── second: id of the binding which has this claim (uint16_t)
+ * 
+ * This structure stores claim info pairs under two keys: action and pin number.
+ * This means that each claim is specific to each combination of action and 
+ * pin number.
+ * 
+ * To access the claim info for a specific action and pin, use the following
+ * approach:
+ * 
+ * ```
+ * action_claims[action][pin].first  // returns whether there's a claim
+ * action_claims[action][pin].second // returns which binding has the claim
+ * ```
+ */
+std::map<bb_action, std::map<uint8_t, std::pair<bool, uint16_t>>> action_claims;
 
 /**
  * @brief Register an event binding
@@ -57,8 +89,19 @@ void register_binding(bb_action action, bb_event event, int32_t min, int32_t max
     servos[pin] = *servo;
 
     // register binding
-    binding b = {action, event, min, max, 0, pin, exec_without_controller};
+    binding b = {
+        .action = action, 
+        .event = event, 
+        .min = min, 
+        .max = max, 
+        .default_value = 0, 
+        .pin = pin, 
+        .exec_without_controller = exec_without_controller,
+        .ignore_claims = false,
+    };
     bindings.push_back(b);
+
+    logi(LOG_TAG, "Registered binding %d: action=%d, event=%d", bindings.size()-1, 0, event);
 }
 
 /**
@@ -226,24 +269,56 @@ void event_manager_update() {
     controller_handle([&](ControllerPtr controller) {
 
         // for each binding
-        for (binding bind : bindings) {
+        for (uint16_t bind_id = 0; bind_id < bindings.size(); bind_id++) {
 
-            // variable for storing value of the bound event
-            int32_t event_value = bind.default_value;
+            // get reference to binding object
+            binding &bind = bindings[bind_id];
 
-            // if controller is connected
-            if (controller != nullptr) {
+            // first check if the action hasn't yet already been claimed by another binding
+            // or if the action is claimed by this binding
+            // (or if the binding ignores claims just resolve as true)
+            if ((!action_claims[bind.action][bind.pin].first) || 
+                ( action_claims[bind.action][bind.pin].second == bind_id) || 
+                bind.ignore_claims
+            ) {
 
-                // determine the event value from the event type
-                event_value = get_event_value(bind.event, controller, bind.min, bind.max);
+                // variable for storing value of the bound event
+                int32_t event_value = bind.default_value;
 
-            }
-            // otherwise assume the default
+                // if controller is connected
+                if (controller != nullptr) {
 
-            // perform the action if controller is connected, or exec without controller is enabled for this binding
-            if ((controller != nullptr) || bind.exec_without_controller) {
-                // logi(LOG_TAG, "acting value=%d", event_value);
-                perform_action(event_value, bind, controller);
+                    // determine the event value from the event type
+                    event_value = get_event_value(bind.event, controller, bind.min, bind.max);
+
+                }
+                // otherwise assume the default
+
+                // set claim flag if not already claimed
+                // but only if the input is non-default
+                if (event_value != bind.default_value) {
+                    if (!action_claims[bind.action][bind.pin].first) {
+                        action_claims[bind.action][bind.pin].first = true;
+                        action_claims[bind.action][bind.pin].second = bind_id;
+                        logi(LOG_TAG, "Action %d on pin %d claimed by binding %d", bind.action, bind.pin, bind_id);
+                    }
+                }
+                // if the input _is_ the default, assume the action has been unclaimed
+                // (but only if this is the claimant binding)
+                else if (action_claims[bind.action][bind.pin].second == bind_id) {
+                    if (action_claims[bind.action][bind.pin].first) {
+                        action_claims[bind.action][bind.pin].first = false;
+                        action_claims[bind.action][bind.pin].second = 0;
+                        logi(LOG_TAG, "Action %d on pin %d unclaimed by binding %d", bind.action, bind.pin, bind_id);
+                    }
+                }
+
+                // perform the action if controller is connected, or exec without controller is enabled for this binding
+                if ((controller != nullptr) || bind.exec_without_controller) {
+                    // logi(LOG_TAG, "acting value=%d", event_value);
+                    perform_action(event_value, bind, controller);
+                }
+
             }
 
         }

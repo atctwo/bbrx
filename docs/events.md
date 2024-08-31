@@ -40,6 +40,27 @@ Normally this would be a huge issue for motors; if your controller runs out of b
 ### `exec_without_controller` is true (default)
 In this case, the bound action will be executed irrespective of how many controllers are connected.  Since there's no controller to provide an input value for the action, a default of 0 is assumed.  This is an appropriate value for most cases, but in future versions there might be a way to provide a custom default for each binding.
 
+## Action Claiming
+What happens when an action is triggered by two separate simultaneous input events?  Without action claiming, the bindings for both events will run at the same time, so each action will be run twice, against both inputs.  This could be a problem for things like motors; if one binding is telling the motor to run at 100 RPM and one is telling it to run at -50 RPM, what happens?
+
+To resolve this problem, actions are "claimed" by the first binding that runs which calls that action.  That is, actions are allowed to be executed by inputs on a first-come-first-serve basis.  When an input event registers with a non-default value (meaning that the control is assumed to have been moved out of the neutral position), the first binding to be executed for each combination of action and pin will claim that combination.  As soon as the input returns to the default value, the claim will be removed so future bindings can call the action.
+
+The result of this is that no two inputs can control an action *at the same time*, but it means that two inputs can control the same action at different times.  If you had trigger and brake bound to a single servo channel, and you pressed the trigger, the brake would do nothing (at least for the motor) until you release the trigger.  While the trigger is pressed, the trigger-servo binding has a claim to that servo channel on that pin, and nothing else can affect it until the claim is lost.
+
+> [!TIP] Ignoring Claims
+> In some cases it might be useful for a binding to always run, irrespective of who has claimed the action (if anyone).  In these cases, each binding has a flag called `ignore_claims`; if this is set, then when the binding is run it will just ignore any claims made on the bound action.  Keep in mind that this binding will then make it's own claim on the action, if one hasn't already been made.
+
+> [!NOTE] Combination of Action and Pin
+Claims aren't just made for each action.  Since all servo output is performed by the `BB_ACTION_SERVO` action, if this action were to be claimed on it's own then no other servos could run at all!  As such, claims are made on the combination of action and pin.  So, when a binding is made to a servo channel, claims are actually made for the `BB_ACTION_SERVO` action *on the specified pin*, meaning that `BB_ACTION_SERVO` actions can still run on other pins.  This allows multiple claims to be made for the same action, with the pin number acting as a sort of index.
+
+> [!NOTE] Implementation
+> This feature is implemented using the following logic:
+> - when a binding is executed, it checks if the action has been claimed.  if it has, then the binding does nothing.  
+> - if (1) the action has not been claimed, (2) the action has been claimed for the current binding, or (3) the ignore claims flag is set for the current binding
+>   - if the event value is *not* the default, it sets the claimed flag of the action
+>   - if the event value *is* the default, it clears the claimed flag
+>   - either way, the action will be executed as normal (pending [`exec_without_controller`](#what-happens-when-no-controllers-are-connected) and other conditions)
+
 # Implementation
 To implement this, each supported receiver action implements a standard function prototype:
 ```c++

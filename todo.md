@@ -12,7 +12,7 @@ This is a list of all the planned features of bbrx.
 - [ ] Feedback (eg: led colour, rumble)
 - [ ] On-board WS2812 status
 - [x] Dynamic pin config (in config.h for each channel you specify which input to react to somehow)
-- [ ] make sure that only one event can call an action at a time
+- [x] make sure that only one event can call an action at a time
 - [x] fix deadzones
 - [ ] add deadzones to other analog inputs
 - [ ] Weapon control using L2 / R2
@@ -29,6 +29,8 @@ This is a list of all the planned features of bbrx.
 - [ ] speed action, which just writes the input directly to `speed_limit`
   - so you could bind speed to the brake input, and a ch1 to the throttle input
 - [ ] replace register_binding params with a single struct
+- [ ] ansi colour codes in output (to differentiate system events and output events)
+- [ ] fix brake action name spelling error
 - [ ] Documentation
 - [ ] update outdated info in main readme
 - [ ] update outdated info on event implementation
