@@ -11,18 +11,10 @@ bbrx allows users to "bind" **receiver actions** to zero or more **gamepad event
 There are a number of ways in which each binding can be configured, since different actions will require different parameters based on input.  This document explains (in maybe too much detail) what each parameter does, how it works, and how to consider what values you might need in your case.
 
 ## Input Range
-Each binding specifies a minimum and maximum range that the value of gamepad events can be.  In most cases, the standard range of an input should be provided for each binding, in order to make full use of the input.  Sometimes, however, it can be useful to provide a custom range, to change how the input's value is interpreted.  
-
-In general, the following ranges are returned by each input:
-
-| Gamepad input                       | Min Value | Max Value |
-|-------------------------------------|-----------|-----------|
-| Analog Stick                        | -511      | 512       |
-| Analog Trigger (brake and throttle) | 0         | 1023      |
-| Button                              | 0         | 1         |
+Each binding specifies a minimum and maximum range that the value of gamepad events can be.  In most cases, the standard range of an input should be provided for each binding, in order to make full use of the input.  The range of values returned by each input can be found in the [complete event list](./action_event_list.md#events-bb_event).  Sometimes, however, it can be useful to provide a custom range, to change how the input's value is interpreted.  
 
 > [!TIP]
-> Even though the button's output is technically binary, it's still considered a numeric value so that any action can be mapped to any event.
+> Even though buttons' outputs are technically binary, they're still considered numeric values so that any action can be mapped to any event.
 
 
 > [!IMPORTANT] The input's default position might not be 0 RPM!

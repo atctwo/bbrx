@@ -6,8 +6,13 @@ Many Battlebots are designed to receive commands from standard flight controller
 
 I don't have a flight controller, but I have lots of ESP32 boards laying around.  So I decided to make this thing, which replaces the conventional receiver with a microcontroller with Bluetooth running Arduino, and replaces the flight controller with a standard Bluetooth gamepad.
 
-## PWM Output
-Most ESCs used in hobbyist RC projects expect motor control signals to be pulse width modulated (PWM).  Specifically, they expect the same type of signal that you would use to control the position of a servo motor, where the position is relative to the pulse width.  Servos typically expect a PWM signal of 50 Hz, where a pulse lasting 1000µs puts the servo at -90°, a pulse lasting 2000µs puts the servo at +90°, and a pulse at 1500µs puts the motor at 0°.  ESCs don't control the position of a motor, instead they control how fast the motor is going; 1000µs means reverse at full speed, 2000µs means forward at full speed, and 1500µs means stop.
+# Features
+Progress is being tracked in [todo.md](./todo.md); for now here is a list of completed features:
+- outputs servo PWM used by most ESCs
+- highly configurable [binding system](./docs/events.md) where any action can be bound to any gamepad input
+- speed control
+- [failsafes](./docs/failsafes.md)
+- configurable deadzones
 
 # Controls
 Here is a big list of every output or reaction that bbrx produces to each input on the gamepad:
