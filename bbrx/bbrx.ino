@@ -25,8 +25,8 @@ void setup() {
 
 
     // main motor control bindings
-    register_binding(BB_ACTION_SERVO, BB_EVENT_ANALOG_LY, -512, 512, PIN_OUT_CH1);
-    register_binding(BB_ACTION_SERVO, BB_EVENT_ANALOG_LX, -512, 512, PIN_OUT_CH2);
+    register_binding(BB_ACTION_SERVO, BB_EVENT_ANALOG_LX,  511, -512, PIN_OUT_CH2);
+    register_binding(BB_ACTION_SERVO, BB_EVENT_ANALOG_LY, -512, 511, PIN_OUT_CH1);
 
     // weapon control bindings
     // register_binding(BB_ACTION_SERVO, BB_EVENT_ANALOG_BRAKE,    -1024,  1024, PIN_OUT_CH1);

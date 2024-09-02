@@ -7,7 +7,7 @@
 #include "log.h"
 #include "config.h"
 
-int16_t speed_limit = 60; // this is the amount by which the top speed (forwards + backwards) is reduced; when this is 0, max speed is 180
+int16_t speed_limit = 0;  // this is the amount by which the top speed (forwards + backwards) is reduced; when this is 0, max speed is 180
 bool brake = false;       // if true, then all servos will stop
 
 #define LOG_TAG "events"
@@ -114,10 +114,10 @@ void register_binding(bb_action action, bb_event event, int32_t min, int32_t max
  * @param max the maximum value of the range of inputs
  * @return int32_t 
  */
-int32_t deadzone(int32_t input, int32_t dead, int32_t beef, int32_t min, int32_t max) {
+int32_t deadzone(int32_t input, int32_t dead, int32_t beef, int32_t min_value, int32_t max_value) {
     if (input > -dead && input < dead) input = 0;
-    if (input > beef)                  input = max;
-    if (input < -beef)                 input = -max;
+    if (input > beef)                  input = max(min_value, max_value);
+    if (input < -beef)                 input = min(min_value, max_value);
     // float ch1_out = ( (float)-input / 4.0 ) + 128.0;
     // input += max;
 
@@ -300,7 +300,7 @@ void event_manager_update() {
                     if (!action_claims[bind.action][bind.pin].first) {
                         action_claims[bind.action][bind.pin].first = true;
                         action_claims[bind.action][bind.pin].second = bind_id;
-                        logi(LOG_TAG, "Action %d on pin %d claimed by binding %d", bind.action, bind.pin, bind_id);
+                        // logi(LOG_TAG, "Action %d on pin %d claimed by binding %d", bind.action, bind.pin, bind_id);
                     }
                 }
                 // if the input _is_ the default, assume the action has been unclaimed
@@ -309,19 +309,22 @@ void event_manager_update() {
                     if (action_claims[bind.action][bind.pin].first) {
                         action_claims[bind.action][bind.pin].first = false;
                         action_claims[bind.action][bind.pin].second = 0;
-                        logi(LOG_TAG, "Action %d on pin %d unclaimed by binding %d", bind.action, bind.pin, bind_id);
+                        // logi(LOG_TAG, "Action %d on pin %d unclaimed by binding %d", bind.action, bind.pin, bind_id);
                     }
                 }
 
                 // perform the action if controller is connected, or exec without controller is enabled for this binding
                 if ((controller != nullptr) || bind.exec_without_controller) {
                     // logi(LOG_TAG, "acting value=%d", event_value);
+                    Serial.printf("%d\t", event_value);
                     perform_action(event_value, bind, controller);
                 }
 
             }
 
         }
+
+        Serial.println("");
 
     });
 
