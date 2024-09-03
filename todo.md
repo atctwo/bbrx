@@ -7,16 +7,17 @@ This is a list of all the planned features of bbrx.
 - [x] replace `Servo::write()` with `Servo::writeMicroseconds()` and define min + max pulse width in config.h
 - [x] PWM frequency in config.h
 - [x] Variable max speed
-- [ ] Failsafes
-- [ ] Failsafe Documentation (.md)
+- [x] Failsafes
+- [x] Failsafe Documentation (.md)
 - [ ] Feedback (eg: led colour, rumble)
 - [ ] On-board WS2812 status
 - [x] Dynamic pin config (in config.h for each channel you specify which input to react to somehow)
 - [x] make sure that only one event can call an action at a time
 - [x] fix deadzones
-- [ ] add deadzones to other analog inputs
-- [ ] Weapon control using L2 / R2
-- [ ] load bindings from config.h
+- [x] add deadzones to other analog inputs
+- [x] fix exec without controller being false by default
+- [x] Weapon control using L2 / R2
+- [x] load bindings from config.h
 - [ ] add dpad events
 - [ ] event repeat timing
 - [x] print controller info on connect
@@ -35,9 +36,29 @@ This is a list of all the planned features of bbrx.
 - [ ] Documentation
 - [ ] update outdated info in main readme
 - [ ] update outdated info on event implementation
-- [ ] document deadzones
+- [ ] document binding creation
+  - [ ] deadzones
+  - [ ] servo pin limits
 - [ ] credits on readme
 - [ ] docs index
+
+# Declaring Bindings in config.h
+### Phase 1
+- update `register_binding()` so that it accepts a `binding` struct object instead of params (since there are a lot of params)
+- add default values to `binding` struct, rather than in `register_binding()`
+- update default binding registrations to use initialiser lists to init object
+
+### Phase 2
+- think of some way to declare bindings in config.h that can be translated / interpreted into an initialiser list
+- maybe an initaliser list using dot notation, eg
+```c
+#define BINDING_COUNT 3
+#define BINDINGS_OR_SOMETHING {
+  {.action = BBRX_ACTION_HELLO1, .event = BBRX_EVENT_A, .min = 0, .max = 1},
+  {.action = BBRX_ACTION_HELLO2, .event = BBRX_EVENT_LX, .min = -512, .max = 512, .pin = 12},
+  {.action = BBRX_ACTION_HELLO3, .event = BBRX_EVENT_LY, .min = -512, .max = 512, .pin = 13},
+}
+```
 
 # Future Ideas :thinking:
 - dynamically load bindings from an SD card
