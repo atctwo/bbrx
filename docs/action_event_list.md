@@ -40,6 +40,14 @@ Gamepad events are based on the inputs exposed by Bluepad32, which bbrx depends 
 | `BB_EVENT_ACCEL_Y`              | Accelerometer, Y axis                             | G                |
 | `BB_EVENT_ACCEL_Z`              | Accelerometer, Z axis                             | G                |
 
+### D-Pad Buttons
+| Event                           | Description                                       | Range Minimum | Range Maximum |
+|---------------------------------|---------------------------------------------------|---------------|---------------|
+| `BB_EVENT_DPAD_UP`              | Up button on the D-Pad                            | 0             | 1             |
+| `BB_EVENT_DPAD_DOWN`            | Down button on the D-Pad                          | 0             | 1             |
+| `BB_EVENT_DPAD_LEFT`            | Left button on the D-Pad                          | 0             | 1             |
+| `BB_EVENT_DPAD_RIGHT`           | Right button on the D-Pad                         | 0             | 1             |
+
 ### Controller Buttons
 | Event                           | Xbox          | PlayStation      | Nintendo          | Range Minimum | Range Maximum |
 |---------------------------------|---------------|------------------|-------------------|---------------|---------------|

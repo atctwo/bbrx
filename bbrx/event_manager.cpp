@@ -118,6 +118,10 @@ int32_t get_event_value(bb_event event, ControllerPtr controller, int32_t min, i
         case BB_EVENT_ACCEL_X:              return controller->accelX();
         case BB_EVENT_ACCEL_Y:              return controller->accelY();
         case BB_EVENT_ACCEL_Z:              return controller->accelZ();
+        case BB_EVENT_DPAD_UP:              return controller->dpad() & 0x01;
+        case BB_EVENT_DPAD_DOWN:            return controller->dpad() & 0x02;
+        case BB_EVENT_DPAD_LEFT:            return controller->dpad() & 0x08;
+        case BB_EVENT_DPAD_RIGHT:           return controller->dpad() & 0x04;
         case BB_EVENT_BTN_A:                return controller->a();
         case BB_EVENT_BTN_B:                return controller->b();
         case BB_EVENT_BTN_X:                return controller->x();

@@ -36,6 +36,12 @@ enum bb_event {
     BB_EVENT_ACCEL_Y,
     BB_EVENT_ACCEL_Z,
 
+    // dpad buttons
+    BB_EVENT_DPAD_UP,
+    BB_EVENT_DPAD_DOWN,
+    BB_EVENT_DPAD_LEFT,
+    BB_EVENT_DPAD_RIGHT,
+
     // controller buttons
     BB_EVENT_BTN_A,
     BB_EVENT_BTN_B,
