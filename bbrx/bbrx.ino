@@ -25,17 +25,12 @@ void setup() {
 
 
     // main motor control bindings
-    register_binding(BB_ACTION_SERVO, BB_EVENT_ANALOG_LX,  511, -512, PIN_OUT_CH2);
-    register_binding(BB_ACTION_SERVO, BB_EVENT_ANALOG_LY, -512, 511, PIN_OUT_CH1);
 
-    // weapon control bindings
-    // register_binding(BB_ACTION_SERVO, BB_EVENT_ANALOG_BRAKE,    -1024,  1024, PIN_OUT_CH1);
-    // register_binding(BB_ACTION_SERVO, BB_EVENT_ANALOG_THROTTLE,  1024, -1024, PIN_OUT_CH1);
+    bb_binding bindings[] = BB_DEFAULT_BINDINGS;
 
-    // brake and speed control
-    register_binding(BB_ACTION_BREAK, BB_EVENT_BTN_A, 0, 1);
-    register_binding(BB_ACTION_SPEED_UP, BB_EVENT_BTN_B, 0, 1);
-    register_binding(BB_ACTION_SPEED_DOWN, BB_EVENT_BTN_X, 0, 1);
+    for (auto b : bindings) {
+        register_binding(b);
+    }
 }
 
 void loop() {

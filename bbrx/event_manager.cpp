@@ -13,25 +13,10 @@ bool brake = false;       // if true, then all servos will stop
 #define LOG_TAG "events"
 
 /**
- * @brief Struct to hold details for each binding
- * 
- */
-struct binding {
-    bb_action action;                       // the receiver action to perform when the event occurs
-    bb_event  event;                        // the event to which the action should respond
-    int32_t   min;                          // minimum value of the range of possible inputs
-    int32_t   max;                          // maximum value of the range of possible inputs
-    int32_t   default_value;                // the default / neural position value for the event (for when no controller is connected and detecting when inputs are neutral)
-    uint8_t   pin;                          // which pin to use as output
-    bool      exec_without_controller;      // whether to execute the action if a controller isn't connected (with event value = 0)
-    bool      ignore_claims;                // if true, execute the bound action even if it is claimed by another binding
-};
-
-/**
  * @brief Vector to store each registered binding
  * 
  */
-std::vector<binding> bindings;
+std::vector<bb_binding> bindings;
 
 /**
  * @brief Map to hold Servo objects for each pin which is used for servo output
@@ -73,35 +58,22 @@ std::map<bb_action, std::map<uint8_t, std::pair<bool, uint16_t>>> action_claims;
 /**
  * @brief Register an event binding
  * 
- * @param action the receiver action to perform when the event occurs
- * @param event the event to which the action should respond
- * @param min minimum value of the range of possible inputs
- * @param max maximum value of the range of possible inputs
- * @param pin which pin to use as output (optional)
- * @param exec_without_controller whether to execute the action if a controller isn't connected (with event value = 0) (optional)
+ * @param b a bbrx_binding object which contains all the details of the binding
  */
-void register_binding(bb_action action, bb_event event, int32_t min, int32_t max, uint8_t pin, bool exec_without_controller) {
+void register_binding(bb_binding b) {
     
     // if a pin is registered for a servo action, create a servo object for that pin
-    Servo *servo = new Servo();
-    servo->setPeriodHertz(ESC_PWM_FREQ);
-    servo->attach(pin, ESC_PWM_MIN, ESC_PWM_MAX);
-    servos[pin] = *servo;
+    if (b.action == BB_ACTION_SERVO) {
+        Servo *servo = new Servo();
+        servo->setPeriodHertz(ESC_PWM_FREQ);
+        servo->attach(b.pin, ESC_PWM_MIN, ESC_PWM_MAX);
+        servos[b.pin] = *servo;
+    }
 
     // register binding
-    binding b = {
-        .action = action, 
-        .event = event, 
-        .min = min, 
-        .max = max, 
-        .default_value = 0, 
-        .pin = pin, 
-        .exec_without_controller = exec_without_controller,
-        .ignore_claims = false,
-    };
     bindings.push_back(b);
 
-    logi(LOG_TAG, "Registered binding %d: action=%d, event=%d", bindings.size()-1, 0, event);
+    logi(LOG_TAG, "Registered binding %d: action=%d, event=%d", bindings.size()-1, b.action, b.event);
 }
 
 /**
@@ -186,7 +158,7 @@ int32_t get_event_value(bb_event event, ControllerPtr controller, int32_t min, i
  * @param max maximum value of the range of possible inputs
  * @param pin which pin to use as output (optional)
  */
-void perform_action(int32_t event_value, binding bind, ControllerPtr controller=nullptr) {
+void perform_action(int32_t event_value, bb_binding bind, ControllerPtr controller=nullptr) {
 
     int32_t out, input;
 
@@ -272,7 +244,7 @@ void event_manager_update() {
         for (uint16_t bind_id = 0; bind_id < bindings.size(); bind_id++) {
 
             // get reference to binding object
-            binding &bind = bindings[bind_id];
+            bb_binding &bind = bindings[bind_id];
 
             // first check if the action hasn't yet already been claimed by another binding
             // or if the action is claimed by this binding
