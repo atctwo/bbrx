@@ -24,9 +24,9 @@ This is a list of all the planned features of bbrx.
 - [ ] cumulative bindings
 - [x] speed action, which just writes the input directly to `speed_limit`
   - so you could bind speed to the brake input, and a ch1 to the throttle input
-- [ ] replace register_binding params with a single struct
-- [ ] verbose log level
-- [ ] ansi colour codes in output (to differentiate system events and output events) for different log levels
+- [x] replace register_binding params with a single struct
+- [x] verbose log level
+- [x] ansi colour codes in output (to differentiate system events and output events) for different log levels
 - [ ] fix brake action name spelling error
 - [ ] Documentation
 - [ ] update outdated info in main readme

@@ -170,9 +170,8 @@ void perform_action(int32_t event_value, bb_binding bind, ControllerPtr controll
         case BB_ACTION_TEST:
 
             // map input to boolean
-            // logi(LOG_TAG, "value=%d\tout=%d", event_value, map(event_value, min, max, 0, 1));
             if (event_value > ((bind.max - bind.min) / 2) + bind.min) {
-                logi(LOG_TAG, "event manager test!!! pin=%d", bind.pin);
+                logd(LOG_TAG, "event manager test!!! pin=%d", bind.pin);
             }
 
             break;
@@ -180,7 +179,7 @@ void perform_action(int32_t event_value, bb_binding bind, ControllerPtr controll
         case BB_ACTION_SERVO:
 
             out = map(event_value, bind.min, bind.max, ESC_PWM_MIN + speed_limit, ESC_PWM_MAX - speed_limit);
-            logd(LOG_TAG, "servo out: raw: %d, scaled: %d", event_value, out);
+            logv(LOG_TAG, "servo out: raw: %d, scaled: %d", event_value, out);
             
             // write channel output
             if (brake) servos[bind.pin].writeMicroseconds(ESC_PWM_MID);
@@ -208,7 +207,7 @@ void perform_action(int32_t event_value, bb_binding bind, ControllerPtr controll
         case BB_ACTION_SPEED_SET:
 
             out = map(event_value, bind.min, bind.max, 0, (ESC_PWM_MAX-ESC_PWM_MIN)/2);
-            logi(LOG_TAG, "speed set: raw: %d, scaled: %d", event_value, out);
+            logv(LOG_TAG, "speed set: raw: %d, scaled: %d", event_value, out);
             speed_limit = out;
             break;
 
@@ -283,7 +282,7 @@ void event_manager_update() {
                     if (!action_claims[bind.action][bind.pin].first) {
                         action_claims[bind.action][bind.pin].first = true;
                         action_claims[bind.action][bind.pin].second = bind_id;
-                        // logi(LOG_TAG, "Action %d on pin %d claimed by binding %d", bind.action, bind.pin, bind_id);
+                        logd(LOG_TAG, "Action %d on pin %d claimed by binding %d", bind.action, bind.pin, bind_id);
                     }
                 }
                 // if the input _is_ the default, assume the action has been unclaimed
@@ -292,13 +291,13 @@ void event_manager_update() {
                     if (action_claims[bind.action][bind.pin].first) {
                         action_claims[bind.action][bind.pin].first = false;
                         action_claims[bind.action][bind.pin].second = 0;
-                        // logi(LOG_TAG, "Action %d on pin %d unclaimed by binding %d", bind.action, bind.pin, bind_id);
+                        logd(LOG_TAG, "Action %d on pin %d unclaimed by binding %d", bind.action, bind.pin, bind_id);
                     }
                 }
 
                 // perform the action if controller is connected, or exec without controller is enabled for this binding
                 if ((controller != nullptr) || bind.exec_without_controller) {
-                    // logi(LOG_TAG, "acting value=%d", event_value);
+                    logv(LOG_TAG, "acting value=%d", event_value);
                     // Serial.printf("%d\t", event_value);
                     perform_action(event_value, bind, controller);
                 }
