@@ -35,13 +35,13 @@ To demonstrate these concepts, here are a few examples:
 ## What happens when no controllers are connected?
 When the event manager runs each binding, and there aren't any controllers connected, it does one of two things depending on the value of the binding parameter `exec_without_controller`:
 
-### `exec_without_controller` is false
+### `exec_without_controller` is false (default)
 In this case, the bound action simply won't be executed if there isn't any connected controller.  If the action affects some state when it is called, that state will remain unchanged once the controller is disconnected.  For example, if you have an action bound to pull some GPIO pin high in response to a button being pressed, and the button is pressed when the controller disconnects, the action won't be called but the GPIO pin will still be high!
 
 Normally this would be a huge issue for motors; if your controller runs out of battery when the device is in motion, and `exec_without_controller` is false for the motor binding, the motors will just keep going!  However, there's a failsafe in place which means that *all* motors will stop when no controller is connected.  For more info, check the [failsafe documentation](./failsafes.md#kill-motors-when-no-controllers-are-connected).
 
-### `exec_without_controller` is true (default)
-In this case, the bound action will be executed irrespective of how many controllers are connected.  Since there's no controller to provide an input value for the action, a default of 0 is assumed.  This is an appropriate value for most cases, but in future versions there might be a way to provide a custom default for each binding.
+### `exec_without_controller` is true
+In this case, the bound action will be executed irrespective of how many controllers are connected.  Since there's no controller to provide an input value for the action, a default of value is assumed.  The default value used itself has a default value of 0, but this caan be overridden on a per-binding basis by setting the `default` property of the value.
 
 ## Action Claiming
 What happens when an action is triggered by two separate simultaneous input events?  Without action claiming, the bindings for both events will run at the same time, so each action will be run twice, against both inputs.  This could be a problem for things like motors; if one binding is telling the motor to run at 100 RPM and one is telling it to run at -50 RPM, what happens?
