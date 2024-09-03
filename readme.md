@@ -15,14 +15,17 @@ Progress is being tracked in [todo.md](./todo.md); for now here is a list of com
 - configurable deadzones
 
 # Controls
-Here is a big list of every output or reaction that bbrx produces to each input on the gamepad:
+As mentioned above, bbrx supports dynamic binding of receiver actions to gamepad events.  This allows users to set up their own control schemes specific to their devices.  However, at least for now the bindings are configured at compile-time.  bbrx includes a "default" mapping which should cover most applications, and is also used for development.  The default bindings are as follows:
 
-| Gamepad Event             | Response                         |
-|---------------------------|----------------------------------|
-| Left Analog Stick, X axis | Controls the output of channel 1 |
-| Left Analog Stick, Y axis | Controls the output of channel 2 |
-
-For each PWM channel, the PWM output is set to 1500µs when the stick is neutral, 1000µs when the stick is fully negative, and 2000µs when the stick is fully positive.
+| Gamepad Input     | Action                      |
+|-------------------|-----------------------------|
+| Left Stick X axis | Servo Channel 1             |
+| Left Stick Y axis | Servo Channel 2             |
+| Throttle (on L2)  | Servo Channel 3 (forwards)  |
+| Brake (on R2)     | Servo Channel 3 (backwards) |
+| A (xbox)          | Brake (kills all motors)    |
+| B (xbox)          | Max speed up                |
+| X (xbox)          | Max speed down              |
 
 # Building
 ## Arduino IDE
@@ -43,4 +46,4 @@ Next, you have to install bbrx's library dependencies from Arduino's library man
 Finally, you can build and upload the code as normal.
 
 ## Arduino CLI
-bbrx comes with a [`Makefile`](./Makefile) which performs calls to `arduino-cli` to perform all of the required setup and build commands automatically!  First, install the required board package and libraries by running `make setup`.  Next, just run `make` to build and upload the project.
+bbrx comes with a [`Makefile`](./Makefile) which performs calls to `arduino-cli` to perform all of the required setup and build commands automatically!  First, make sure `arduino-cli` is installed (Arduino provide their own instructions [here](https://arduino.github.io/arduino-cli/1.0/installation/).  Then, install the required board package and libraries by running `make setup`.  Next, just run `make` to build and upload the project.
