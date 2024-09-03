@@ -205,6 +205,13 @@ void perform_action(int32_t event_value, bb_binding bind, ControllerPtr controll
             }
             break;
 
+        case BB_ACTION_SPEED_SET:
+
+            out = map(event_value, bind.min, bind.max, 0, (ESC_PWM_MAX-ESC_PWM_MIN)/2);
+            logi(LOG_TAG, "speed set: raw: %d, scaled: %d", event_value, out);
+            speed_limit = out;
+            break;
+
         case BB_ACTION_BREAK:
 
             input = (event_value > ((bind.max - bind.min) / 2) + bind.min);

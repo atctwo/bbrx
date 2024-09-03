@@ -22,7 +22,7 @@ This is a list of all the planned features of bbrx.
 - [ ] event repeat timing
 - [x] print controller info on connect
 - [ ] cumulative bindings
-- [ ] speed action, which just writes the input directly to `speed_limit`
+- [x] speed action, which just writes the input directly to `speed_limit`
   - so you could bind speed to the brake input, and a ch1 to the throttle input
 - [ ] replace register_binding params with a single struct
 - [ ] verbose log level

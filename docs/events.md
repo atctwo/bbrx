@@ -70,6 +70,17 @@ The result of this is that no two inputs can control an action *at the same time
 >   - if the event value *is* the default, it clears the claimed flag
 >   - either way, the action will be executed as normal (pending [`exec_without_controller`](#what-happens-when-no-controllers-are-connected) and other conditions)
 
+# Example Bindings
+## Analog Speed Control
+```c
+{.action = BB_ACTION_SPEED_SET, .event = BB_EVENT_ANALOG_THROTTLE, .min = 1023, .max = 0}
+```
+This binding provides a way to manually set the speed separately from the direction.  Normally the `BB_ACTION_SERVO` action determines both the direction and speed of the motors on it's own.  However it might be useful in some cases to be able to control the speed separately (think about how in a car, the steering wheel controls direction, and the accelerator controls speed).
+
+This binds the throttle (R2) directly to the speed control variable, so that when the throttle is neutral the speed is set to zero.  Even if the servo action is bound, nothing will happen.  When the throttle is fully pressed, the speed is set to it's max value (based on the min and max ESC PWM values).  This makes the throttle act kind of like an accelerator!
+
+Keep in mind that this somewhat conflicts with the `BB_ACTION_SPEED_UP` and `BB_ACTION_SPEED_DOWN` actions.  While these actions will still work, `BB_ACTION_SPEED_SET` will just override the speed variable with the continuous analog input, so the first two actions won't really seem to do anything.
+
 # Implementation
 To implement this, each supported receiver action implements a standard function prototype:
 ```c++
