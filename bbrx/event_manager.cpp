@@ -134,12 +134,12 @@ int32_t deadzone(int32_t input, int32_t dead, int32_t beef, int32_t min_value, i
 int32_t get_event_value(bb_event event, ControllerPtr controller, int32_t min, int32_t max) {
 
     switch(event) {
-        case BB_EVENT_ANALOG_LX:            return deadzone(controller->axisX(), DEADZONE_LX, BEEFZONE_LX, min, max);
-        case BB_EVENT_ANALOG_LY:            return deadzone(controller->axisY(), DEADZONE_LY, BEEFZONE_LY, min, max);
-        case BB_EVENT_ANALOG_RX:            return deadzone(controller->axisRX(), DEADZONE_LX, BEEFZONE_LX, min, max);
-        case BB_EVENT_ANALOG_RY:            return deadzone(controller->axisRY(), DEADZONE_LY, BEEFZONE_LY, min, max);
-        case BB_EVENT_ANALOG_BRAKE:         return controller->brake();
-        case BB_EVENT_ANALOG_THROTTLE:      return controller->throttle();
+        case BB_EVENT_ANALOG_LX:            return deadzone(controller->axisX(),    DEADZONE_LX,       BEEFZONE_LX,       min, max);
+        case BB_EVENT_ANALOG_LY:            return deadzone(controller->axisY(),    DEADZONE_LY,       BEEFZONE_LY,       min, max);
+        case BB_EVENT_ANALOG_RX:            return deadzone(controller->axisRX(),   DEADZONE_LX,       BEEFZONE_LX,       min, max);
+        case BB_EVENT_ANALOG_RY:            return deadzone(controller->axisRY(),   DEADZONE_LY,       BEEFZONE_LY,       min, max);
+        case BB_EVENT_ANALOG_BRAKE:         return deadzone(controller->brake(),    DEADZONE_BRAKE,    BEEFZONE_BRAKE,    min, max);
+        case BB_EVENT_ANALOG_THROTTLE:      return deadzone(controller->throttle(), DEADZONE_THROTTLE, BEEFZONE_THROTTLE, min, max);
         case BB_EVENT_GYRO_X:               return controller->gyroX();
         case BB_EVENT_GYRO_Y:               return controller->gyroY();
         case BB_EVENT_GYRO_Z:               return controller->gyroY();
@@ -316,7 +316,7 @@ void event_manager_update() {
                 // perform the action if controller is connected, or exec without controller is enabled for this binding
                 if ((controller != nullptr) || bind.exec_without_controller) {
                     // logi(LOG_TAG, "acting value=%d", event_value);
-                    Serial.printf("%d\t", event_value);
+                    // Serial.printf("%d\t", event_value);
                     perform_action(event_value, bind, controller);
                 }
 
@@ -324,7 +324,7 @@ void event_manager_update() {
 
         }
 
-        Serial.println("");
+        // Serial.println("");
 
     });
 

@@ -16,10 +16,20 @@
 #define FAILSAFE_NO_CONTROLLER          // enables the failsafe where if no controllers are detected, the motors will be killed
 
 //  Bot Control Settings
+
+// each binding specifies a minimum and maximum value for the input range
+// deadzone is the value below which the input defaults to 0
+// beefzone is the value above which the input defaults to max(range_min, range_max), _and_
+//             the value _below_ which the input defaults to min(range_min, range_max)
 #define DEADZONE_LY             32      // inner deadzone for the left analog stick y axis
 #define BEEFZONE_LY             500     // outer deadzone for the left analog stick y axis
 #define DEADZONE_LX             32      // inner deadzone for the left analog stick x axis
 #define BEEFZONE_LX             500     // outer deadzone for the left analog stick x axis
+
+#define DEADZONE_BRAKE          64      // inner deadzone for the analog brake (L2)
+#define BEEFZONE_BRAKE          1000    // outer deadzone for the analog brake (L2)
+#define DEADZONE_THROTTLE       64      // inner deadzone for the analog throttle (R2)
+#define BEEFZONE_THROTTLE       1000    // outer deadzone for the analog throttle (R2)
 
 // Pin Definitions
 #define PIN_OUT_CH1             12      // pin to use for PWM channel 1 output
