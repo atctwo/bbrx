@@ -28,8 +28,8 @@ Each binding specifies a minimum and maximum range that the value of gamepad eve
 
 To demonstrate these concepts, here are a few examples:
 - For servo channel 1, it's most common to bind the Ch1 action to the Left Analog Y event.  To make full use of the Y axis' range, `min` should be -512 and `max` should be +512
-- Say you had a spinning weapon motor which takes standard PWM servo input on Ch3.  One fun control scheme would be to bind Ch3 to the brake trigger (on R2), with `min=-1023` and `max=1023`.  You would have full control over the motor with R2.  (Remember that the range is twice as big as analog triggers provide so that the default position is always in the middle).  
-  - Now, consider what would happen if you made another bind, from Ch3 to *the trigger input (on L2)*, with `min=-1023` and `max=1023`.  This would provide the same range as the first bind, but since the range is flipped the motor will run backwards!  This allows you to control the rotation *and direction* of the motor, where L2 makes the motor spin one way and R2 makes it spin the other!
+- Say you had a spinning weapon motor which takes standard PWM servo input on Ch3.  One fun control scheme would be to bind Ch3 to the throttle trigger (on R2), with `min=-1023` and `max=1023`.  You would have full control over the motor with R2.  (Remember that the range is twice as big as analog triggers provide so that the default position is always in the middle).  
+  - Now, consider what would happen if you made another bind, from Ch3 to *the brake input (on L2)*, with `min=-1023` and `max=1023`.  This would provide the same range as the first bind, but since the range is flipped the motor will run backwards!  This allows you to control the rotation *and direction* of the motor, where L2 makes the motor spin one way and R2 makes it spin the other!
   - what happens when you press both triggers at the same time?  check out the section on [action claiming](#action-claiming) to find out!
 
 ## What happens when no controllers are connected?

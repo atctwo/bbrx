@@ -27,8 +27,8 @@ Gamepad events are based on the inputs exposed by Bluepad32, which bbrx depends 
 | `BB_EVENT_ANALOG_LY`            | Left Analog Stick, Y axis                         | -512          | 511           |
 | `BB_EVENT_ANALOG_RX`            | Right Analog Stick, X axis                        | -512          | 511           |
 | `BB_EVENT_ANALOG_RY`            | Right Analog Stick, Y axis                        | -512          | 511           |
-| `BB_EVENT_ANALOG_BRAKE`         | Left Analog Trigger (same button as L2)           | 0             | 1023          |
-| `BB_EVENT_ANALOG_THROTTLE`      | Right Analog Trigger (same button as R2)          | 0             | 1023          |
+| `BB_EVENT_ANALOG_THROTTLE`      | Left Analog Trigger (same button as L2)           | 0             | 1023          |
+| `BB_EVENT_ANALOG_BRAKE`         | Right Analog Trigger (same button as R2)          | 0             | 1023          |
 
 ### Controller Motion Controls
 | Event                           | Description                                       | Measurement Unit |
