@@ -11,7 +11,7 @@ Note: many of these have not been tested with bbrx.  If you spot anything incorr
 | `BB_ACTION_SERVO`         | Analog     | Controls the PWM output of a servo channel over the specified pin   |
 | `BB_ACTION_SPEED_UP`      | Digital    | Decreases the speed limit                                           |
 | `BB_ACTION_SPEED_DOWN`    | Digital    | Increases the speed limit                                           |
-| `BB_ACTION_BREAK`         | Digital    | Enables or disables the breaks                                      |
+| `BB_ACTION_BRAKE`         | Digital    | Enables or disables the breaks                                      |
 
 Actions are split into two types based on input type:
 - **Analog** actions expect a continuous range (in the mathematical sense) of values between `min` and `max`

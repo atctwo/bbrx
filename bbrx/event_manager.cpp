@@ -211,7 +211,7 @@ void perform_action(int32_t event_value, bb_binding bind, ControllerPtr controll
             speed_limit = out;
             break;
 
-        case BB_ACTION_BREAK:
+        case BB_ACTION_BRAKE:
 
             input = (event_value > ((bind.max - bind.min) / 2) + bind.min);
             if (!brake && input) logi(LOG_TAG, "Breaking!");

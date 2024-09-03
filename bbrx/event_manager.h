@@ -12,7 +12,7 @@ enum bb_action {
     BB_ACTION_SPEED_UP,
     BB_ACTION_SPEED_DOWN,
     BB_ACTION_SPEED_SET,
-    BB_ACTION_BREAK
+    BB_ACTION_BRAKE
 };
 
 /**

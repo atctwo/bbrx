@@ -29,7 +29,7 @@
     {.action = BB_ACTION_SERVO, .event = BB_EVENT_ANALOG_THROTTLE, .min =   1023, .max = -1024, .pin = 14},     \
                                                                                                                 \
     /* brake */                                                                                                 \
-    {.action = BB_ACTION_BREAK, .event = BB_EVENT_BTN_A, .min = 0, .max = 1},                                   \
+    {.action = BB_ACTION_BRAKE, .event = BB_EVENT_BTN_A, .min = 0, .max = 1},                                   \
                                                                                                                 \
     /* speed control */                                                                                         \
     {.action = BB_ACTION_SPEED_UP, .event = BB_EVENT_BTN_B, .min = 0, .max = 1},                                \
