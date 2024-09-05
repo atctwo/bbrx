@@ -90,6 +90,6 @@ struct bb_binding {
     bool      ignore_claims;                        // if true, execute the bound action even if it is claimed by another binding
 };
 
-void register_binding(bb_binding b);
+void initialise_binding(bb_binding b);
 void event_manager_setup();
 void event_manager_update();

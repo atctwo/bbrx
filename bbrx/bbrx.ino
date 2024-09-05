@@ -25,11 +25,8 @@ void setup() {
 
 
     // main motor control bindings
-
-    bb_binding bindings[] = BB_DEFAULT_BINDINGS;
-
     for (auto b : bindings) {
-        register_binding(b);
+        initialise_binding(b);
     }
 }
 

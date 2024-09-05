@@ -13,12 +13,6 @@ bool brake = false;       // if true, then all servos will stop
 #define LOG_TAG "events"
 
 /**
- * @brief Vector to store each registered binding
- * 
- */
-std::vector<bb_binding> bindings;
-
-/**
  * @brief Map to hold Servo objects for each pin which is used for servo output
  * 
  */
@@ -56,11 +50,11 @@ std::map<uint8_t, Servo> servos;
 std::map<bb_action, std::map<uint8_t, std::pair<bool, uint16_t>>> action_claims;
 
 /**
- * @brief Register an event binding
+ * @brief Initialise an event binding
  * 
  * @param b a bbrx_binding object which contains all the details of the binding
  */
-void register_binding(bb_binding b) {
+void initialise_binding(bb_binding b) {
     
     // if a pin is registered for a servo action, create a servo object for that pin
     if (b.action == BB_ACTION_SERVO) {
@@ -70,10 +64,7 @@ void register_binding(bb_binding b) {
         servos[b.pin] = *servo;
     }
 
-    // register binding
-    bindings.push_back(b);
-
-    logi(LOG_TAG, "Registered binding %d: action=%d, event=%d", bindings.size()-1, b.action, b.event);
+    logi(LOG_TAG, "Initialised binding %d: action=%d, event=%d", bindings.size()-1, b.action, b.event);
 }
 
 /**

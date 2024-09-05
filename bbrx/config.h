@@ -1,13 +1,31 @@
 #pragma once
 
+/*
+ * bbrx config file
+ *
+ * please note that some config items are #defined since they will never change
+ * over the run time of the program.  however some programs are declared as (extern)
+ * variables and implemented in config.cpp.  This is because these variables are
+ * intended to be overridden after the bbrx config file is loaded.  In the case that
+ * the config file is not loaded, the default values provided in config.cpp are used.
+ * 
+*/
+
+#include <vector>
+#include "event_manager.h"
+
 //  General System Stuff
-#define VERSION_STRING          "v1.0"
+#define VERSION_STRING          "v1.1"
 
 // ESC PWM settings
 #define ESC_PWM_MIN             1000    // minimum pulse width in µs
 #define ESC_PWM_MID             1500    // half-way pulse width in µs
 #define ESC_PWM_MAX             2000    // maximum pulse width in µs
 #define ESC_PWM_FREQ            50      // pwm frequency in Hz
+
+// config.yml loading settings
+#define CONFIG_ENABLE_SD                // enable checking the SD card for config.yml
+#define CONFIG_ENABLE_LITTLEFS          // enable checking littlefs for config.yml
 
 // failsafes
 // you can globally disable all failsafes by commenting out ENABLE_FAILSAFES,
@@ -17,26 +35,8 @@
 
 //  Bot Control Settings
 
-// Default Bindings
-#define BB_DEFAULT_BINDINGS {                                                                                   \
-                                                                                                                \
-    /* movement (servo ch1 + ch2) */                                                                            \
-    {.action = BB_ACTION_SERVO, .event = BB_EVENT_ANALOG_LY, .min = -512, .max =  511, .pin = 12},              \
-    {.action = BB_ACTION_SERVO, .event = BB_EVENT_ANALOG_LX, .min =  511, .max = -512, .pin = 13},              \
-                                                                                                                \
-    /* weapon control */                                                                                        \
-    {.action = BB_ACTION_SERVO, .event = BB_EVENT_ANALOG_BRAKE,    .min =  -1024, .max =  1023, .pin = 14},     \
-    {.action = BB_ACTION_SERVO, .event = BB_EVENT_ANALOG_THROTTLE, .min =   1023, .max = -1024, .pin = 14},     \
-                                                                                                                \
-    /* brake */                                                                                                 \
-    {.action = BB_ACTION_BRAKE, .event = BB_EVENT_BTN_A, .min = 0, .max = 1},                                   \
-                                                                                                                \
-    /* speed control */                                                                                         \
-    {.action = BB_ACTION_SPEED_UP, .event = BB_EVENT_BTN_B, .min = 0, .max = 1},                                \
-    {.action = BB_ACTION_SPEED_DOWN, .event = BB_EVENT_BTN_X, .min = 0, .max = 1},                              \
-    {.action = BB_ACTION_SPEED_UP, .event = BB_EVENT_DPAD_UP, .min = 0, .max = 1},                              \
-    {.action = BB_ACTION_SPEED_DOWN, .event = BB_EVENT_DPAD_DOWN, .min = 0, .max = 1},                          \
-}
+// vector storing all bindings
+extern std::vector<bb_binding> bindings;
 
 // Deadzones and Beefzones
 // each binding specifies a minimum and maximum value for the input range
