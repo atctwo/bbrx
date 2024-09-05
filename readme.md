@@ -9,10 +9,10 @@ I don't have a flight controller, but I have lots of ESP32 boards laying around.
 # Features
 Progress is being tracked in [todo.md](./todo.md); for now here is a list of completed features:
 - outputs servo PWM used by most ESCs
-- highly configurable [binding system](./docs/events.md) where any action can be bound to any gamepad input
-- speed control
-- [failsafes](./docs/failsafes.md)
-- configurable deadzones
+- highly configurable [binding system](./docs/usage/events.md) where any action can be bound to any gamepad input
+- real-time speed control actions
+- [failsafes](./docs/usage/failsafes.md) to prevent your device from going out of control
+- configurable inner and outer deadzones for analog inputs
 
 # Controls
 As mentioned above, bbrx supports dynamic binding of receiver actions to gamepad events.  This allows users to set up their own control schemes specific to their devices.  However, at least for now the bindings are configured at compile-time.  bbrx includes a "default" mapping which should cover most applications, and is also used for development.  The default bindings are as follows:
@@ -46,4 +46,14 @@ Next, you have to install bbrx's library dependencies from Arduino's library man
 Finally, you can build and upload the code as normal.
 
 ## Arduino CLI
-bbrx comes with a [`Makefile`](./Makefile) which performs calls to `arduino-cli` to perform all of the required setup and build commands automatically!  First, make sure `arduino-cli` is installed (Arduino provide their own instructions [here](https://arduino.github.io/arduino-cli/1.0/installation/).  Then, install the required board package and libraries by running `make setup`.  Next, just run `make` to build and upload the project.
+bbrx comes with a [`Makefile`](./Makefile) which performs calls to `arduino-cli` to perform all of the required setup and build commands automatically!  This is my preferred way of building bbrx since you can use any code editor or IDE you want!
+
+1. First, make sure `arduino-cli` is installed (Arduino provide their own instructions [here](https://arduino.github.io/arduino-cli/1.0/installation/)).  
+2. Install the required board package and libraries by running `make setup`.  
+3. Finally, just run `make` to build and upload the project.
+
+# Credits
+bbrx is built on top of a number of other open source projects!
+- [Arduino](https://www.arduino.cc/), of course, and the [ESP-IDF](https://github.com/espressif/esp-idf) SDK
+- Ricardo Quesada's [Bluepad32](https://github.com/ricardoquesada/bluepad32) is responsible for all of the Bluetooth gamepad communication
+- [ESP32Servo](https://github.com/madhephaestus/ESP32Servo), which implements the Arduino Servo API on the ESP32

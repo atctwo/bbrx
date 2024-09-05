@@ -1,14 +1,32 @@
 # Events and Binding
 bbrx allows users to "bind" **receiver actions** to zero or more **gamepad events**.  This means that users can configure bbrx depending on their specific controller and device.  An example set of binds could be:
-- bind Ch1 to Left Analog Y
-- bind Ch2 to Left Analog X
-- bind Ch3 to L2
-- bind Ch3 to R2
-- bind DpadUp to Max Speed Increase
-- bind DpadDown to Max Speed Decrease
-- bind X to Break
+- bind servo channel 1 to Left Analog Y
+- bind servo channel 2 to Left Analog X
+- bind servo channel 3 to L2
+- bind servo channel 3 to R2
+- bind D-Pad Up to Max Speed Increase
+- bind D-Pad Down to Max Speed Decrease
+- bind A to Break
 
 There are a number of ways in which each binding can be configured, since different actions will require different parameters based on input.  This document explains (in maybe too much detail) what each parameter does, how it works, and how to consider what values you might need in your case.
+
+## The Idea of Bindings
+In bbrx, a bind set is created of one or more bindings.  Essentially, in the main loop of bbrx each binding will be "executed" - the specified input will be read and passed to the specified action, which will process and scale the input to decide what to do with it.  Some actions simply change internal variables like speed, while some produce some output on a hardware pin (like the servo PWM output).
+
+Each binding has a number of _properties_ which affect how each binding is handled when it is "executed".  Each property is 0 or false by default, but there are a few which are recommended to provide specific values for.  The currently implemented properties are as follows:
+
+| Property                      | Required?                            | Description                                                        | Section to Reference
+|-------------------------------|--------------------------------------|--------------------------------------------------------------------|
+| `action`                      | yes                                  | Which action to call                                               |
+| `event`                       | yes                                  | Which event to call the action as a result of                      |
+| `min`                         | yes                                  | Minimum value of the input range                                   | [Input Range](#input-range)
+| `max`                         | yes                                  | Maximum value of the input range                                   | [Input Range](#input-range)
+| `default_value`               | no                                   | Default value to assume when no controller is connected            |
+| `pin`                         | no (unless the action has an output) | Which pin to produce the output on                                 | 
+| `exec_without_controller`     | no                                   | Whether to execute the binding when no controller is connected     | [What happens when no controllers are connected?](#what-happens-when-no-controllers-are-connected)
+| `ignore_claims`               | no                                   | Whether to ignore claims made on an action-pin combination         | [Action Claiming](#action-claiming)
+
+For more info on what each of these actually do, keep reading, or check out their relevant sections!
 
 ## Input Range
 Each binding specifies a minimum and maximum range that the value of gamepad events can be.  In most cases, the standard range of an input should be provided for each binding, in order to make full use of the input.  The range of values returned by each input can be found in the [complete event list](./action_event_list.md#events-bb_event).  Sometimes, however, it can be useful to provide a custom range, to change how the input's value is interpreted.  
@@ -31,6 +49,17 @@ To demonstrate these concepts, here are a few examples:
 - Say you had a spinning weapon motor which takes standard PWM servo input on Ch3.  One fun control scheme would be to bind Ch3 to the throttle trigger (on R2), with `min=-1023` and `max=1023`.  You would have full control over the motor with R2.  (Remember that the range is twice as big as analog triggers provide so that the default position is always in the middle).  
   - Now, consider what would happen if you made another bind, from Ch3 to *the brake input (on L2)*, with `min=-1023` and `max=1023`.  This would provide the same range as the first bind, but since the range is flipped the motor will run backwards!  This allows you to control the rotation *and direction* of the motor, where L2 makes the motor spin one way and R2 makes it spin the other!
   - what happens when you press both triggers at the same time?  check out the section on [action claiming](#action-claiming) to find out!
+
+## Deadzones (and Beefzones)
+As with most software that handles analog gamepad input, bbrx implements deadzones!  For those who don't know what these are, they essentially "crop out" unwanted input.  Consider an analog stick that has a value of 0 when it's at the neutral position.  Some analog sticks might allow you to wiggle the stick a little bit before it snaps back to neutral, but this often it will register as a non-zero value.  In other words, it might be possible to create a non-zero input value without touching the stick.  Deadzones define a minimum value below which all input is considered zero - if the stick is at neutral but it's registering as a value of 4, as long as it's within the deadzone it will be considered 0.
+
+This is technically an _inner deadzone_, but bbrx also supports _outer deadzones_.  This is the value above which all input is considered to be `max`.  For example, say you had a controller where the analog stick maxed out at 508.  This would mean you would never be able to get to the max value of 512, but if 508 is within the outer deadzone it will be considered as 512.  Within bbrx, the outer deadzone is uniquely referred to as **the beefzone** [this was a fun name I used since i didn't know what else to call it.  it comes from the hexadecimal number `0xDEADBEEF`]
+
+Deadzones and beefzones are defined for each analog input in config.h.  Their defines follow the naming scheme
+```c
+#define DEADZONE_<input_name>
+#define BEEFZONE_<input_name>
+```
 
 ## What happens when no controllers are connected?
 When the event manager runs each binding, and there aren't any controllers connected, it does one of two things depending on the value of the binding parameter `exec_without_controller`:
@@ -80,16 +109,3 @@ This binding provides a way to manually set the speed separately from the direct
 This binds the throttle (R2) directly to the speed control variable, so that when the throttle is neutral the speed is set to zero.  Even if the servo action is bound, nothing will happen.  When the throttle is fully pressed, the speed is set to it's max value (based on the min and max ESC PWM values).  This makes the throttle act kind of like an accelerator!
 
 Keep in mind that this somewhat conflicts with the `BB_ACTION_SPEED_UP` and `BB_ACTION_SPEED_DOWN` actions.  While these actions will still work, `BB_ACTION_SPEED_SET` will just override the speed variable with the continuous analog input, so the first two actions won't really seem to do anything.
-
-# Implementation
-To implement this, each supported receiver action implements a standard function prototype:
-```c++
-void actn_something(int32_t value, int32_t min, int32_t max, uint8_t pin);
-```
-where `value` is the current value of the input, and `min` and `max` are the specified minimum and maximum ranges of the input.  For analog sticks, `min` is -512 and `max` is +512; for buttons `min` is 0 and `max` is 1.  It's up to each action function to process the input value as required (so a PWM channel function would scale `value` linearly to determine the resulting PWM pulse width, whereas a digital function would probably resolve anything that's > `(max/2)` as true, and anything else as false).  As such, action functions should never assume the ranges of the input value, and should always consider the input relative to the provided range.
-
-- there's a cpp file that implements the "event handler"
-- on each BP32 update, it iterates over each binding, gets the specified input value, and passes it along with the specified ranges to the specified action
-- for specifying events and actions i could
-  - pass a std::function<>, ie: you pass the class function itself.  might have issues where functions return different types
-  - have an enum or string for each event or action.  would probably make implementing dynamic binding loading easier (if you can deserialise enums)
