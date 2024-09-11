@@ -26,6 +26,7 @@ This is a list of all the planned features of bbrx.
   - [ ] how each action is implemented
 - [x] credits on readme
 - [x] docs index
+- [ ] tidy up comments on config.h
 
 
 # Cumulative Binding ideas

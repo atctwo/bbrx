@@ -26,6 +26,10 @@
 // config.yml loading settings
 #define CONFIG_ENABLE_SD                // enable checking the SD card for config.yml
 #define CONFIG_ENABLE_LITTLEFS          // enable checking littlefs for config.yml
+#define CONFIG_FILE_PATH        "config.yml"    // the path to the config file
+
+// function to load config file
+void load_config();
 
 // failsafes
 // you can globally disable all failsafes by commenting out ENABLE_FAILSAFES,

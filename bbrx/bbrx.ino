@@ -17,6 +17,10 @@ void setup() {
     logi(LOG_TAG, "build time:  %s %s", __DATE__, __TIME__);
     logi(LOG_TAG, "");
 
+    // load config before SD
+    // ideally this should be one of the first init actions
+    load_config();
+
     // setup controller library
     controller_setup();
 

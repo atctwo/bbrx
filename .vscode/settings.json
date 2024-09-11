@@ -1,5 +1,11 @@
 {
     "files.associations": {
+        "*.json.liquid": "json",
+        "*.yaml.liquid": "yaml",
+        "*.md.liquid": "markdown",
+        "*.js.liquid": "liquid-javascript",
+        "*.css.liquid": "liquid-css",
+        "*.scss.liquid": "liquid-scss",
         "cctype": "cpp",
         "clocale": "cpp",
         "cmath": "cpp",
@@ -84,6 +90,8 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "valarray": "cpp",
-        "variant": "cpp"
-    }
+        "variant": "cpp",
+        "ranges": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
