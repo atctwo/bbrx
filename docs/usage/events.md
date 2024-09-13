@@ -15,16 +15,16 @@ In bbrx, a bind set is created of one or more bindings.  Essentially, in the mai
 
 Each binding has a number of _properties_ which affect how each binding is handled when it is "executed".  Each property is 0 or false by default, but there are a few which are recommended to provide specific values for.  The currently implemented properties are as follows:
 
-| Property                      | Required?                            | Description                                                        | Section to Reference
-|-------------------------------|--------------------------------------|--------------------------------------------------------------------|
-| `action`                      | yes                                  | Which action to call                                               |
-| `event`                       | yes                                  | Which event to call the action as a result of                      |
-| `min`                         | yes                                  | Minimum value of the input range                                   | [Input Range](#input-range)
-| `max`                         | yes                                  | Maximum value of the input range                                   | [Input Range](#input-range)
-| `default_value`               | no                                   | Default value to assume when no controller is connected            |
-| `pin`                         | no (unless the action has an output) | Which pin to produce the output on                                 | 
-| `exec_without_controller`     | no                                   | Whether to execute the binding when no controller is connected     | [What happens when no controllers are connected?](#what-happens-when-no-controllers-are-connected)
-| `ignore_claims`               | no                                   | Whether to ignore claims made on an action-pin combination         | [Action Claiming](#action-claiming)
+| Property                      | Required?                            | Description                                                        | Section to Reference                                                                               |
+|-------------------------------|--------------------------------------|--------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| `action`                      | yes                                  | Which action to call                                               |                                                                                                    |
+| `event`                       | yes                                  | Which event to call the action as a result of                      |                                                                                                    |
+| `min`                         | yes                                  | Minimum value of the input range                                   | [Input Range](#input-range)                                                                        |
+| `max`                         | yes                                  | Maximum value of the input range                                   | [Input Range](#input-range)                                                                        |
+| `default_value`               | no                                   | Default value to assume when no controller is connected            |                                                                                                    |
+| `pin`                         | no (unless the action has an output) | Which pin to produce the output on                                 |                                                                                                    |
+| `exec_without_controller`     | no                                   | Whether to execute the binding when no controller is connected     | [What happens when no controllers are connected?](#what-happens-when-no-controllers-are-connected) |
+| `ignore_claims`               | no                                   | Whether to ignore claims made on an action-pin combination         | [Action Claiming](#action-claiming)                                                                |
 
 For more info on what each of these actually do, keep reading, or check out their relevant sections!
 
