@@ -31,11 +31,13 @@ For more info on what each of these actually do, keep reading, or check out thei
 Notes on accepted values for each property in config.yml:
 - `action` should be [a supported receiver action](action_event_list.md#actions-bb_action)
 - `event` should be [a supported gamepad event](action_event_list.md#events-bb_event)
-- `min` and `max` should be integers (although anything which doesn't parse as a int will default to 0)
+- `min` and `max` should be integers
 - `pin` should be an integer that represents a pin on the ESP32
   - also check the reference for the specific action to make sure it works with the specified pin!
 - `default_value` should also be an integer (ideally between `min` and `max`)
 - `exec_without_controller` and `ignore_claims` should be boolean (`true` or `false`)
+
+If any property does not match it's expected data type, it won't be included in the binding definition.  If any required properties are missing or fail to parse, then the entire binding will not be registered.
 
 ## Input Range
 Each binding specifies a minimum and maximum range that the value of gamepad events can be.  In most cases, the standard range of an input should be provided for each binding, in order to make full use of the input.  The range of values returned by each input can be found in the [complete event list](./action_event_list.md#events-bb_event).  Sometimes, however, it can be useful to provide a custom range, to change how the input's value is interpreted.  
