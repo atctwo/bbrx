@@ -23,7 +23,7 @@ setup:
 
 # build sketch using arduino-cli
 build:
-	@$(CLI) compile --fqbn $(FQBN) --build-property build.extra_flags=-DGIT_HASH=\"${GIT_HASH}\" $(SKETCH_NAME)
+	@$(CLI) compile --fqbn $(FQBN) --build-property build.extra_flags=-DGIT_HASH=\"${GIT_HASH}\" --build-property compiler.cpp.extra_flags=-fexceptions $(SKETCH_NAME)
 
 # upload sketch using arduino-cli
 upload:

@@ -20,8 +20,9 @@ void setup() {
     #endif
     logi(LOG_TAG, "");
 
-    // load config before SD
-    // ideally this should be one of the first init actions
+    // this will load the user config from the configured filesystem
+    // (or will just leave the defaults if this fails).
+    // either way, once this function finishes, a bindset will be set up but not initialised
     load_config();
 
     // setup controller library
@@ -30,8 +31,7 @@ void setup() {
     // setup event manager and hardware needed by actions
     event_manager_setup();
 
-
-    // main motor control bindings
+    // finally, initialise each registered binding
     for (auto b : bindings) {
         initialise_binding(b);
     }

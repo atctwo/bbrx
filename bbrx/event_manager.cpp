@@ -9,6 +9,7 @@
 
 int16_t speed_limit = 0;  // this is the amount by which the top speed (forwards + backwards) is reduced; when this is 0, max speed is 180
 bool brake = false;       // if true, then all servos will stop
+uint16_t bind_count = 0;  // counter for the number of bindings
 
 #define LOG_TAG "events"
 
@@ -52,6 +53,8 @@ std::map<bb_action, std::map<uint8_t, std::pair<bool, uint16_t>>> action_claims;
 /**
  * @brief Initialise an event binding
  * 
+ * Should be called once after all the bindings have been registered!
+ * 
  * @param b a bbrx_binding object which contains all the details of the binding
  */
 void initialise_binding(bb_binding b) {
@@ -64,7 +67,7 @@ void initialise_binding(bb_binding b) {
         servos[b.pin] = *servo;
     }
 
-    logi(LOG_TAG, "Initialised binding %d: action=%d, event=%d", bindings.size()-1, b.action, b.event);
+    logi(LOG_TAG, "Initialised binding %d: action=%d, event=%d, min=%d, max=%d", bind_count++, b.action, b.event, b.min, b.max);
 }
 
 /**
@@ -188,6 +191,7 @@ void perform_action(int32_t event_value, bb_binding bind, ControllerPtr controll
             break;
 
         case BB_ACTION_SPEED_DOWN:
+            logd(LOG_TAG, "im tired value=%d min=%d max=%d", event_value, bind.min, bind.max);
             if (event_value > ((bind.max - bind.min) / 2) + bind.min) {
                 speed_limit++;
                 if (speed_limit > (ESC_PWM_MAX-ESC_PWM_MIN)/2) speed_limit = (ESC_PWM_MAX-ESC_PWM_MIN)/2;
