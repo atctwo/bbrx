@@ -15,6 +15,9 @@ void setup() {
     logi(LOG_TAG, "\n=== bbrx! ===");
     logi(LOG_TAG, "version:     %s", VERSION_STRING);
     logi(LOG_TAG, "build time:  %s %s", __DATE__, __TIME__);
+    #ifdef GIT_HASH
+        logi(LOG_TAG, "commit:      %s", GIT_HASH);
+    #endif
     logi(LOG_TAG, "");
 
     // load config before SD
