@@ -56,7 +56,3 @@ extern std::vector<bb_binding> bindings;
 #define BEEFZONE_BRAKE          1000    // outer deadzone for the analog brake (L2)
 #define DEADZONE_THROTTLE       64      // inner deadzone for the analog throttle (R2)
 #define BEEFZONE_THROTTLE       1000    // outer deadzone for the analog throttle (R2)
-
-// Pin Definitions
-#define PIN_OUT_CH1             12      // pin to use for PWM channel 1 output
-#define PIN_OUT_CH2             13      // pin to use for PWM channel 2 output
