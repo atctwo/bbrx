@@ -34,17 +34,17 @@ bindings:
   min: 0
   max: 1
 
-- action: BB_EVENT_SPEED_UP
+- action: BB_ACTION_SPEED_UP
   event: BB_EVENT_DPAD_UP
   min: 0
   max: 1
 
-- action: BB_EVENT_SPEED_DOWN
+- action: BB_ACTION_SPEED_DOWN
   event: BB_EVENT_BTN_X
   min: 0
   max: 1
 
-- action: BB_EVENT_SPEED_DOWN
+- action: BB_ACTION_SPEED_DOWN
   event: BB_EVENT_DPAD_DOWN
   min: 0
   max: 1
