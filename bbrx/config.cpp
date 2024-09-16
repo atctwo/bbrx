@@ -1,8 +1,11 @@
 // #define RYML_SINGLE_HDR_DEFINE_NOW
 // #include "ryml.hpp"
 
-#include <Arduino.h>
+#include <stddef.h>
+#include <memory>
 #include <vector>
+#include <Arduino.h>
+#include <LittleFS.h>
 
 #include "fkYAML/node.hpp"
 
@@ -74,6 +77,13 @@ bindings:
 )";
 
 
+/**
+ * @brief A vector containing all currently registered bindings.
+ * 
+ * Consider the following when working with this vector:
+ * - the initial contents of this vector _may_ be overwritten by the config loader
+ * - before new bindings are used, they should be initialised by using event_manager:initialise_binding()
+ */
 std::vector<bb_binding> bindings = {
 
     /* movement (servo ch1 + ch2) */
@@ -118,8 +128,10 @@ bool check_key(fkyaml::node &node, const char *key, fkyaml::node::node_t val_typ
  * Please see the usage docs for info on the contents of the YAML document!
  * 
  * @param yaml the document to parse
+ * @return true the document was parsed successfully and the config was loaded
+ * @return false the document failed to parse or the config was not loaded
  */
-void parse_config(std::string yaml) {
+bool parse_config(std::string yaml) {
 
     try {
 
@@ -131,6 +143,12 @@ void parse_config(std::string yaml) {
         // (if the data type inferred from the yaml document does not match the type expected by this code then
         // this will break :(((   )
         // both these checks are done using the check_key() function
+
+        // test string
+        if (check_key(root, "test", fkyaml::node::node_t::STRING)) {
+            std::string test = root["test"].get_value<std::string>();
+            logi(LOG_TAG, "config test string: %s", test.c_str());
+        }
 
         // get bindings object
         if (check_key(root, "bindings", fkyaml::node::node_t::SEQUENCE)) {
@@ -336,18 +354,84 @@ void parse_config(std::string yaml) {
 
         } else logw(LOG_TAG, "failed to load bindings object from %s", CONFIG_FILE_PATH);
 
+        // once each config key has been checked, return true to indicate that the config was loaded ok
+        return true;
+
     }
     catch (fkyaml::exception &e) {
         loge(LOG_TAG, "there was an error parsing %s:", CONFIG_FILE_PATH);
         loge(LOG_TAG, "%s", e.what());
     }
 
+    // if it gets to this point then assume the loading has failed :(
+    return false;
+
+}
+
+void listDir(fs::FS &fs, const char *dirname, uint8_t levels) {
+  Serial.printf("Listing directory: %s\r\n", dirname);
+
+  File root = fs.open(dirname);
+  if (!root) {
+    Serial.println("- failed to open directory");
+    return;
+  }
+  if (!root.isDirectory()) {
+    Serial.println(" - not a directory");
+    return;
+  }
+
+  File file = root.openNextFile();
+  while (file) {
+    if (file.isDirectory()) {
+      Serial.print("  DIR : ");
+      Serial.println(file.name());
+      if (levels) {
+        listDir(fs, file.path(), levels - 1);
+      }
+    } else {
+      Serial.print("  FILE: ");
+      Serial.print(file.name());
+      Serial.print("\tSIZE: ");
+      Serial.println(file.size());
+    }
+    file = root.openNextFile();
+  }
+}
+
+std::string open_config_file(fs::FS &fs) {
+
+    File f = fs.open(CONFIG_FILE_PATH);
+    if (!f) {
+        logw(LOG_TAG, "Failed to open %s", CONFIG_FILE_PATH);
+    } else {
+
+        // read file into string
+        std::string f_str;
+        f_str.reserve(f.size());
+
+        while (f.available()) {
+            f_str += f.read();
+        }
+
+        // close file
+        f.close();
+
+        logd(LOG_TAG, "file read test:\n%s", f_str.c_str());
+        return f_str;
+
+    }
+
+    return "";
+
 }
 
 /**
  * @brief Load the bbrx config file from the configured filesystem(s)
+ * @return true if the config was loaded from some file system
+ * @return false if no config file was loaded, and defaults were kept
  */
-void load_config() {
+bool load_config() {
 
     // attempt loading from card
     #ifdef CONFIG_ENABLE_SD
@@ -362,12 +446,26 @@ void load_config() {
 
         logi(LOG_TAG, "Loading bbrx config file from LittleFS...");
 
+        if (LittleFS.begin(CONFIG_LFS_FORMAT_IF_FAIL, CONFIG_LFS_BASE_PATH, CONFIG_LFS_MAX_OPEN_FILES, CONFIG_LFS_PARTITION_LABEL)) {
+
+            // try to open config file
+            std::string yaml = open_config_file(LittleFS);
+
+            // if the file was opened ok, try to parse it as yaml
+            if (yaml != "") {
+                bool res = parse_config(yaml);
+
+                // if loading is successful, return from function
+                if (res) return true;
+            }
+
+        } else logw(LOG_TAG, "Failed to initialise littlefs");
+
     #endif
 
     // if this point has been reached, then no attempt to load config.yml
     // has succeeded.  in this case, just use the default config values
     logi(LOG_TAG, "Could not load config file; using default config values");
-
-    parse_config(test_yml);
+    return false;
 
 }
