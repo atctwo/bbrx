@@ -1,5 +1,7 @@
 # bbrx configuration
-One of the design goals of bbrx is versatility - the idea is that it can used in multiple different situations, and can be _adapted_ to work best for each one.  To that end, bbrx is very configurable.  Much of the program's functionality can be specified using a YAML file called **`config.yml`**.  This document discusses both how bbrx finds this file, and explains all the configuration properties the file can have.
+One of the design goals of bbrx is versatility - the idea is that it can used in multiple different situations, and can be _adapted_ to work best for each one.  To that end, bbrx is very configurable.  Much of the program's functionality can be tweaked using a YAML file called **`config.yml`**.  This document discusses both how bbrx finds this file, and explains all the configuration properties the file can have.
+
+The most important thing you can configure are **bindings** - these are basically how bbrx knows what to do when certain input events occur.  For more info on how bindings work, check out [**Events and Binding**](events.md).
 
 # Config File Loading Process
 When bbrx boots up, one of the first things it does is search for `config.yml`.  It searches a couple of places (which take the form of filesystems) with a predefined priority (ie: it checks each place in order until it finds one with which `config.yml` can be read).  If none of the configured places can be read, or none of them have (a valid) `config.yml`, then the default values provided in [`config.h`](../../bbrx/config.h) and [`config.cpp`](../../bbrx/config.cpp) will be used.
@@ -42,3 +44,68 @@ This target depends on a couple of external programs:
 - to upload the image, it uses [`esptool`](https://github.com/espressif/esptool).  You can specify the path to the `esptool` Python file by setting the `ESPTOOL_PATH` variable, but by default it tries to locate the latest version bundles with the ESP32 Arduino core, so in most cases it should work without providing a path yourself.
 
 # `config.yml` reference
+This section of this document explains each of the things you can configure using `config.yml`.  [Example config files](../../extras/configs/) file are provided in the `extras` directory of this repository.
+
+## Bindings
+The heart of bbrx, bindings are expressed as a list of objects under the `bindings` top-level key.  The keys / properties that each object can contain are listed below:
+
+| Property                      | Required?                            | Description                                                        | Section to Reference                                                                               |
+|-------------------------------|--------------------------------------|--------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
+| `action`                      | yes                                  | Which action to call                                               |                                                                                                    |
+| `event`                       | yes                                  | Which event to call the action as a result of                      |                                                                                                    |
+| `min`                         | yes                                  | Minimum value of the input range                                   | [Input Range](events.md#input-range)                                                                        |
+| `max`                         | yes                                  | Maximum value of the input range                                   | [Input Range](events.md#input-range)                                                                        |
+| `default_value`               | no                                   | Default value to assume when no controller is connected            |                                                                                                    |
+| `pin`                         | no (unless the action has an output) | Which pin to produce the output on                                 |                                                                                                    |
+| `exec_without_controller`     | no                                   | Whether to execute the binding when no controller is connected     | [What happens when no controllers are connected?](events.md#what-happens-when-no-controllers-are-connected) |
+| `ignore_claims`               | no                                   | Whether to ignore claims made on an action-pin combination         | [Action Claiming](events.md#action-claiming)                                                                |
+
+For more info on what each of these actually do and how they work, check out their relevant sections in [the event system docs](events.md)!
+
+Please also note that the values for each key are expected to be of certain data types:
+- `action` should be [a supported receiver action](action_event_list.md#actions-bb_action)
+- `event` should be [a supported gamepad event](action_event_list.md#events-bb_event)
+- `min` and `max` should be integers
+- `pin` should be an integer that represents a pin on the ESP32
+  - also check the reference for the specific action to make sure it works with the specified pin!
+- `default_value` should also be an integer (ideally between `min` and `max`)
+- `exec_without_controller` and `ignore_claims` should be boolean (`true` or `false`)
+
+If any property does not match it's expected data type, it won't be included in the binding definition.  If any required properties are missing or fail to parse, then the entire binding will not be registered.
+
+## Example Config Snippets
+### Basic ESC Control with left analog stick
+This example assumes you have an ESC which takes in two servo PWM channels to control the speed and direction of a few motors.  It binds the Y axis of the left analog stick to pin 12 ("channel 1") and the X axis to pin 13 ("channel 2"), allowing you to use the left stick to control the speed and direction of the motors.
+
+```yaml
+bindings:
+# servo channel 1
+- action: BB_ACTION_SERVO
+  event: BB_EVENT_ANALOG_LY
+  min: -512
+  max: 511
+  pin: 12
+
+# servo channel 2
+- action: BB_ACTION_SERVO
+  event: BB_EVENT_ANALOG_LX
+  min: 511
+  max: -512
+  pin: 13
+```
+
+### Analog Speed Control
+This binding provides a way to manually set the speed separately from the direction.  With most ESCs, you can use `BB_ACTION_SERVO` action with two output channels to determine both the direction and speed of the motors on it's own.  However it might be useful in some cases to be able to control the speed separately (think about how in a car, the steering wheel controls direction, and the accelerator controls speed).
+
+This binds the throttle (R2) directly to the speed control variable, so that when the throttle is neutral the speed is set to zero.  Even if the servo action is bound, nothing will happen.  When the throttle is fully pressed, the speed is set to it's max value (based on the min and max ESC PWM values), even if there's no input to the servo action.  This makes the throttle act kind of like an accelerator!
+
+Keep in mind that this somewhat conflicts with the `BB_ACTION_SPEED_UP` and `BB_ACTION_SPEED_DOWN` actions.  While these actions will still work, `BB_ACTION_SPEED_SET` will just override the speed variable with the continuous analog input, so the first two actions won't really seem to do anything.
+
+```yaml
+bindings:
+# analog speed control
+- action: BB_ACTION_SPEED_SET
+  event: BB_EVENT_ANALOG_THROTTLE
+  min: 1023
+  max: 0
+```

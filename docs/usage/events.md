@@ -13,31 +13,7 @@ There are a number of ways in which each binding can be configured, since differ
 ## The Idea of Bindings
 In bbrx, a bind set is created of one or more bindings.  Essentially, in the main loop of bbrx each binding will be "executed" - the specified input will be read and passed to the specified action, which will process and scale the input to decide what to do with it.  Some actions simply change internal variables like speed, while some produce some output on a hardware pin (like the servo PWM output).
 
-Each binding has a number of _properties_ which affect how each binding is handled when it is "executed".  Each property is 0 or false by default, but there are a few which are recommended to provide specific values for.  The currently implemented properties are as follows:
-
-| Property                      | Required?                            | Description                                                        | Section to Reference                                                                               |
-|-------------------------------|--------------------------------------|--------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| `action`                      | yes                                  | Which action to call                                               |                                                                                                    |
-| `event`                       | yes                                  | Which event to call the action as a result of                      |                                                                                                    |
-| `min`                         | yes                                  | Minimum value of the input range                                   | [Input Range](#input-range)                                                                        |
-| `max`                         | yes                                  | Maximum value of the input range                                   | [Input Range](#input-range)                                                                        |
-| `default_value`               | no                                   | Default value to assume when no controller is connected            |                                                                                                    |
-| `pin`                         | no (unless the action has an output) | Which pin to produce the output on                                 |                                                                                                    |
-| `exec_without_controller`     | no                                   | Whether to execute the binding when no controller is connected     | [What happens when no controllers are connected?](#what-happens-when-no-controllers-are-connected) |
-| `ignore_claims`               | no                                   | Whether to ignore claims made on an action-pin combination         | [Action Claiming](#action-claiming)                                                                |
-
-For more info on what each of these actually do, keep reading, or check out their relevant sections!
-
-Notes on accepted values for each property in config.yml:
-- `action` should be [a supported receiver action](action_event_list.md#actions-bb_action)
-- `event` should be [a supported gamepad event](action_event_list.md#events-bb_event)
-- `min` and `max` should be integers
-- `pin` should be an integer that represents a pin on the ESP32
-  - also check the reference for the specific action to make sure it works with the specified pin!
-- `default_value` should also be an integer (ideally between `min` and `max`)
-- `exec_without_controller` and `ignore_claims` should be boolean (`true` or `false`)
-
-If any property does not match it's expected data type, it won't be included in the binding definition.  If any required properties are missing or fail to parse, then the entire binding will not be registered.
+Each binding has a number of _properties_ which affect how they are handled when they're "executed".  Each property is 0 or false by default, but there are a few which are recommended to provide specific values for.  For more info on each property that bbrx supports, check out the documentation on [the `bindings` object](config.md#bindings) of `config.yml` files.
 
 ## Input Range
 Each binding specifies a minimum and maximum range that the value of gamepad events can be.  In most cases, the standard range of an input should be provided for each binding, in order to make full use of the input.  The range of values returned by each input can be found in the [complete event list](./action_event_list.md#events-bb_event).  Sometimes, however, it can be useful to provide a custom range, to change how the input's value is interpreted.  
@@ -109,14 +85,3 @@ The result of this is that no two inputs can control an action *at the same time
 >   - if the event value is *not* the default, it sets the claimed flag of the action
 >   - if the event value *is* the default, it clears the claimed flag
 >   - either way, the action will be executed as normal (pending [`exec_without_controller`](#what-happens-when-no-controllers-are-connected) and other conditions)
-
-# Example Bindings
-## Analog Speed Control
-```c
-{.action = BB_ACTION_SPEED_SET, .event = BB_EVENT_ANALOG_THROTTLE, .min = 1023, .max = 0}
-```
-This binding provides a way to manually set the speed separately from the direction.  Normally the `BB_ACTION_SERVO` action determines both the direction and speed of the motors on it's own.  However it might be useful in some cases to be able to control the speed separately (think about how in a car, the steering wheel controls direction, and the accelerator controls speed).
-
-This binds the throttle (R2) directly to the speed control variable, so that when the throttle is neutral the speed is set to zero.  Even if the servo action is bound, nothing will happen.  When the throttle is fully pressed, the speed is set to it's max value (based on the min and max ESC PWM values).  This makes the throttle act kind of like an accelerator!
-
-Keep in mind that this somewhat conflicts with the `BB_ACTION_SPEED_UP` and `BB_ACTION_SPEED_DOWN` actions.  While these actions will still work, `BB_ACTION_SPEED_SET` will just override the speed variable with the continuous analog input, so the first two actions won't really seem to do anything.
