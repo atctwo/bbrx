@@ -14,6 +14,9 @@ Currently, the following filesystems are supported (listed in order of which is 
 The following subsections go into detail about how to setup each filesystem.  Also, each filesystem can individually be enabled or disabled by (un)commenting the relevant `CONFIG_ENABLE_*` define in [`config.h`](../../bbrx/config.h).
 
 ## SD Card
+> [!WARNING]
+> Please note that SD card support is completely untested (for now)!!!
+
 The first location which is searched is an SD card.  For this location, bbrx will first try to initialise the SD card; it will attempt to communicate with it using SPI on the pins defined in [`config.h`](../../bbrx/config.h).  If it fails to initialise it moves on to the next method.  If it succeeds, then it will try to read `config.yml` from the root of the SD.
 
 Because most ESP32 boards don't have an SD card slot, this location is actually disabled by default.  To make use of it, go to `config.h` and uncomment the line
