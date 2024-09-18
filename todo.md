@@ -9,7 +9,7 @@ This is a list of all the planned features of bbrx.
 - [ ] GPIO action
 - [ ] CI to test pushes to github
 - [x] Load config from file
-- [ ] SD support
+- [x] SD support
 - [ ] load deadzones from config.yml
 - [ ] update littlefs make target to read lfs size+offset from partitions.csv
 - [ ] pull + build mklittlefs automatically
