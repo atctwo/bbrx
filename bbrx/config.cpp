@@ -301,14 +301,14 @@ bool parse_config(std::string yaml) {
                 logd(LOG_TAG, "");
             }
 
-        } else logw(LOG_TAG, "failed to load bindings object from %s", CONFIG_FILE_PATH);
+        } else logw(LOG_TAG, "Failed to load bindings from %s", CONFIG_FILE_PATH);
 
         // once each config key has been checked, return true to indicate that the config was loaded ok
         return true;
 
     }
     catch (fkyaml::exception &e) {
-        loge(LOG_TAG, "there was an error parsing %s:", CONFIG_FILE_PATH);
+        loge(LOG_TAG, "There was an error parsing %s:", CONFIG_FILE_PATH);
         loge(LOG_TAG, "%s", e.what());
     }
 
@@ -409,7 +409,10 @@ bool load_config() {
 
             // try to open and parse config file
             bool res = open_config_file(sd_fs);
-            if (res) return true; // else continue with function
+            if (res) {
+                logi(LOG_TAG, "Loaded config from SD card!");
+                return true; 
+            } // else continue with function
 
             // end sd
             sd.end();
@@ -436,7 +439,10 @@ bool load_config() {
 
             // try to open and parse config file
             bool res = open_config_file(LittleFS);
-            if (res) return true; // else continue with function
+            if (res) {
+                logi(LOG_TAG, "Loaded config from LittleFS!");
+                return true; 
+            } // else continue with function
 
             // end littlefs
             LittleFS.end();
