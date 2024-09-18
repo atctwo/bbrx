@@ -14,16 +14,26 @@
 #include <vector>
 #include "event_manager.h"
 
+//-------------------------------------------
 //  General System Stuff
+//-------------------------------------------
+
 #define VERSION_STRING          "v1.1"
 
+
+//-------------------------------------------
 // ESC PWM settings
+//-------------------------------------------
+
 #define ESC_PWM_MIN             1000    // minimum pulse width in µs
 #define ESC_PWM_MID             1500    // half-way pulse width in µs
 #define ESC_PWM_MAX             2000    // maximum pulse width in µs
 #define ESC_PWM_FREQ            50      // pwm frequency in Hz
 
+//-------------------------------------------
 // config.yml loading settings
+//-------------------------------------------
+
 #define CONFIG_FILE_PATH            "/config.yml"   // the path to the config file
 
 #define CONFIG_ENABLE_SD                            // enable checking the SD card for config.yml
@@ -42,13 +52,20 @@
 // function to load config file
 bool load_config();
 
+
+//-------------------------------------------
 // failsafes
+//-------------------------------------------
+
 // you can globally disable all failsafes by commenting out ENABLE_FAILSAFES,
 // or you can disable specific failsafes by uncommenting their specific define
 #define ENABLE_FAILSAFES                // when defined, failsafes will be enabled.  PLEASE DON'T DISABLE THIS UNLESS YOU REALLY REALLY REALLY NEED TO!!!!!!!PLEASE
 #define FAILSAFE_NO_CONTROLLER          // enables the failsafe where if no controllers are detected, the motors will be killed
 
+
+//-------------------------------------------
 //  Bot Control Settings
+//-------------------------------------------
 
 // vector storing all bindings
 extern std::vector<bb_binding> bindings;
