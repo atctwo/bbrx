@@ -96,7 +96,7 @@ bool parse_config(std::string yaml) {
         // test string
         if (check_key(root, "test", fkyaml::node::node_t::STRING)) {
             std::string test = root["test"].get_value<std::string>();
-            logi(LOG_TAG, "config test string: %s", test.c_str());
+            logd(LOG_TAG, "config test string: %s", test.c_str());
         }
 
         // get bindings object
@@ -366,7 +366,7 @@ bool open_config_file(fs::FS &fs) {
         // close file
         f.close();
 
-        logd(LOG_TAG, "file read test:\n%s", yaml.c_str());
+        logv(LOG_TAG, "file read test:\n%s", yaml.c_str());
 
         // if the file was opened ok, try to parse it as yaml
         if (yaml != "") {
@@ -400,7 +400,7 @@ bool load_config() {
 
         // try to init sd card
         SdFs sd;
-        SdSpiConfig sd_config(CONFIG_SD_PIN_CS, USER_SPI_BEGIN, SD_SCK_MHZ(CONFIG_SD_SPI_FREQ));
+        SdSpiConfig sd_config(CONFIG_SD_PIN_CS, USER_SPI_BEGIN, CONFIG_SD_SPI_FREQ);
         if (sd.begin(sd_config)) {
 
             // get fs:FS filesystem for use with open_config_file()
@@ -414,7 +414,12 @@ bool load_config() {
             // end sd
             sd.end();
 
-        } else logw(LOG_TAG, "Failed to initialise SD card");
+        } else {
+            LOG_OUTPUT.print("             "); // padding to line up with log prefix since i can't use my logging library i have to use serial!!!!!!!!! :(
+            printSdErrorText(&LOG_OUTPUT, sd.card()->errorCode());
+            LOG_OUTPUT.println("");
+            logw(LOG_TAG, "Failed to initialise SD card (error code %d, data %d)", sd.card()->errorCode(), sd.card()->errorData());
+        }
 
         // end spi
         SPI.end();

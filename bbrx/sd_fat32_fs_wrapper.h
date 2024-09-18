@@ -131,7 +131,6 @@ public:
     virtual ~SdFat32FSImpl() {}
 
     virtual fs::FileImplPtr open(const char* path, const char* mode, const bool create) {
-        Serial.printf("FileImplPtr open aufgerufen\n");
         return std::make_shared<SdFatFile32Impl>(sd.open(path, _convert_access_mode_to_flag(mode, create)));
     }
 

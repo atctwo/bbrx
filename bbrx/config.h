@@ -27,11 +27,11 @@
 #define CONFIG_FILE_PATH            "/config.yml"   // the path to the config file
 
 #define CONFIG_ENABLE_SD                            // enable checking the SD card for config.yml
-#define CONFIG_SD_PIN_MISO          0
-#define CONFIG_SD_PIN_MOSI          0
-#define CONFIG_SD_PIN_SCLK          0
-#define CONFIG_SD_PIN_CS            0
-#define CONFIG_SD_SPI_FREQ          100000
+#define CONFIG_SD_PIN_MISO          27
+#define CONFIG_SD_PIN_MOSI          13
+#define CONFIG_SD_PIN_SCLK          14
+#define CONFIG_SD_PIN_CS            25
+#define CONFIG_SD_SPI_FREQ          10000
 
 #define CONFIG_ENABLE_LITTLEFS                      // enable checking littlefs for config.yml
 #define CONFIG_LFS_FORMAT_IF_FAIL   true            // whether to format the littlefs partition if it fails to init

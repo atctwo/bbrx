@@ -10,6 +10,7 @@ I don't have a flight controller, but I have lots of ESP32 boards laying around.
 Progress is being tracked in [todo.md](./todo.md); for now here is a list of completed features:
 - outputs servo PWM used by most ESCs
 - highly configurable [binding system](./docs/usage/events.md) where any action can be bound to any gamepad input
+- bindings and other [configuration settings](./docs/usage/config.md) can be loaded from an SD card or a LittleFS partition in flash
 - real-time speed control actions
 - [failsafes](./docs/usage/failsafes.md) to prevent your device from going out of control
 - configurable inner and outer deadzones for analog inputs
