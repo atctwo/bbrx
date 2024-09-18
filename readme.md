@@ -54,6 +54,8 @@ bbrx comes with a [`Makefile`](./Makefile) which performs calls to `arduino-cli`
 
 # Credits
 bbrx is built on top of a number of other open source projects!
-- [Arduino](https://www.arduino.cc/), of course, and the [ESP-IDF](https://github.com/espressif/esp-idf) SDK
+- [Arduino](https://www.arduino.cc/), of course, and the [ESP-IDF](https://github.com/espressif/esp-idf) SDK and the [Arduino core for ESP32](https://github.com/espressif/arduino-esp32)
 - Ricardo Quesada's [Bluepad32](https://github.com/ricardoquesada/bluepad32) is responsible for all of the Bluetooth gamepad communication
 - [ESP32Servo](https://github.com/madhephaestus/ESP32Servo), which implements the Arduino Servo API on the ESP32
+- [fkYAML](https://github.com/fktn-k/fkYAML) by ftkn-k is used for parsing the `config.yml` file
+- Bill Greiman's [SdFat](https://github.com/greiman/SdFat) library is used for SD card access

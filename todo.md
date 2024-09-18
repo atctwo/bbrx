@@ -10,6 +10,7 @@ This is a list of all the planned features of bbrx.
 - [ ] CI to test pushes to github
 - [x] Load config from file
 - [ ] SD support
+- [ ] load deadzones from config.yml
 - [ ] update littlefs make target to read lfs size+offset from partitions.csv
 - [ ] pull + build mklittlefs automatically
 
@@ -17,10 +18,10 @@ This is a list of all the planned features of bbrx.
 - usage docs
   - [x] update outdated info in main readme
   - [x] update outdated info on event implementation
-  - [ ] document binding creation
+  - [x] document binding creation
     - [x] deadzones
     - [x] servo pin limits
-    - [ ] how to write config.yml files 
+    - [x] how to write config.yml files 
   - [ ] document config file loading approach
   - [x] move docs into usage folder
 - developer docs

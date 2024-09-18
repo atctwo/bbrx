@@ -31,6 +31,7 @@ test:
 setup:
 	@$(CLI) core install $(BOARD) --additional-urls $(BOARD_PKG_ESP32),$(BOARD_PKG_BP32)
 	@$(CLI) lib install ESP32Servo
+	@$(CLI) lib install SdFat@2.2.2
 
 # build sketch using arduino-cli
 build:
