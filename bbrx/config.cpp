@@ -399,7 +399,7 @@ void listDir(fs::FS &fs, const char *dirname, uint8_t levels) {
   }
 }
 
-std::string open_config_file(fs::FS &fs) {
+bool open_config_file(fs::FS &fs) {
 
     File f = fs.open(CONFIG_FILE_PATH);
     if (!f) {
@@ -407,22 +407,29 @@ std::string open_config_file(fs::FS &fs) {
     } else {
 
         // read file into string
-        std::string f_str;
-        f_str.reserve(f.size());
+        std::string yaml;
+        yaml.reserve(f.size());
 
         while (f.available()) {
-            f_str += f.read();
+            yaml += f.read();
         }
 
         // close file
         f.close();
 
-        logd(LOG_TAG, "file read test:\n%s", f_str.c_str());
-        return f_str;
+        logd(LOG_TAG, "file read test:\n%s", yaml.c_str());
+
+        // if the file was opened ok, try to parse it as yaml
+        if (yaml != "") {
+            bool res = parse_config(yaml);
+
+            // if loading is successful, return from function
+            return res;
+        }
 
     }
 
-    return "";
+    return false;
 
 }
 
@@ -448,16 +455,9 @@ bool load_config() {
 
         if (LittleFS.begin(CONFIG_LFS_FORMAT_IF_FAIL, CONFIG_LFS_BASE_PATH, CONFIG_LFS_MAX_OPEN_FILES, CONFIG_LFS_PARTITION_LABEL)) {
 
-            // try to open config file
-            std::string yaml = open_config_file(LittleFS);
-
-            // if the file was opened ok, try to parse it as yaml
-            if (yaml != "") {
-                bool res = parse_config(yaml);
-
-                // if loading is successful, return from function
-                if (res) return true;
-            }
+            // try to open and parse config file
+            bool res = open_config_file(LittleFS);
+            if (res) return true; // else continue with function
 
         } else logw(LOG_TAG, "Failed to initialise littlefs");
 
