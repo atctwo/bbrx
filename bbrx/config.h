@@ -24,9 +24,16 @@
 #define ESC_PWM_FREQ            50      // pwm frequency in Hz
 
 // config.yml loading settings
-#define CONFIG_ENABLE_SD                            // enable checking the SD card for config.yml
-#define CONFIG_ENABLE_LITTLEFS                      // enable checking littlefs for config.yml
 #define CONFIG_FILE_PATH            "/config.yml"   // the path to the config file
+
+#define CONFIG_ENABLE_SD                            // enable checking the SD card for config.yml
+#define CONFIG_SD_PIN_MISO          0
+#define CONFIG_SD_PIN_MOSI          0
+#define CONFIG_SD_PIN_SCLK          0
+#define CONFIG_SD_PIN_CS            0
+#define CONFIG_SD_SPI_FREQ          100000
+
+#define CONFIG_ENABLE_LITTLEFS                      // enable checking littlefs for config.yml
 #define CONFIG_LFS_FORMAT_IF_FAIL   true            // whether to format the littlefs partition if it fails to init
 #define CONFIG_LFS_BASE_PATH        "/littlefs"     // base path at which to mount fs
 #define CONFIG_LFS_MAX_OPEN_FILES   10              // maximum number of open files at any given time

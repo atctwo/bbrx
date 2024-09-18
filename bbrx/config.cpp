@@ -5,8 +5,10 @@
 #include <memory>
 #include <vector>
 #include <Arduino.h>
+#include <FS.h>
+#include <FSImpl.h>
 #include <LittleFS.h>
-
+#include "sd_fat32_fs_wrapper.h"
 #include "fkYAML/node.hpp"
 
 #include "event_manager.h"
@@ -14,68 +16,15 @@
 #include "log.h"
 #include "config.h"
 
+// include SdFat libraries
+// since these are conditional, you can only use sdfat
+// stuff if CONFIG_ENABLE_SD is defined!
+#ifdef CONFIG_ENABLE_SD
+    #include "SdFat.h"
+    #include "sdios.h"
+#endif
+
 #define LOG_TAG "config"
-
-std::string test_yml = R"(
-# bbrx config.yml test
-
-bindings:
-# servo channel 1
-- action: BB_ACTION_SERVO
-  event: BB_EVENT_ANALOG_LY
-  min: -512
-  max: 511
-  pin: 12
-
-# servo channel 2
-- action: BB_ACTION_SERVO
-  event: BB_EVENT_ANALOG_LX
-  min: 511
-  max: -512
-  pin: 13
-
-# weapon control
-- action: BB_ACTION_SERVO
-  event: BB_EVENT_ANALOG_BRAKE
-  min: -1024
-  max: 1023
-  pin: 14
-
-- action: BB_ACTION_SERVO
-  event: BB_EVENT_ANALOG_THROTTLE
-  min: 1023
-  max: -1024
-  pin: 14
-
-# speed control
-- action: BB_ACTION_SPEED_UP
-  event: BB_EVENT_BTN_B
-  min: 0
-  max: 1
-
-- action: BB_ACTION_SPEED_UP
-  event: BB_EVENT_DPAD_UP
-  min: 0
-  max: 1
-
-- action: BB_ACTION_SPEED_DOWN
-  event: BB_EVENT_BTN_X
-  min: 0
-  max: 1
-
-- action: BB_ACTION_SPEED_DOWN
-  event: BB_EVENT_DPAD_DOWN
-  min: 0
-  max: 1
-
-# break
-- action: BB_ACTION_BRAKE
-  event: BB_EVENT_BTN_A
-  min: 0
-  max: 1
-
-)";
-
 
 /**
  * @brief A vector containing all currently registered bindings.
@@ -445,6 +394,31 @@ bool load_config() {
 
         logi(LOG_TAG, "Loading bbrx config file from SD...");
 
+        // init SPI
+        SPI.begin(CONFIG_SD_PIN_SCLK, CONFIG_SD_PIN_MISO, CONFIG_SD_PIN_MOSI);
+        SPI.setFrequency(CONFIG_SD_SPI_FREQ);
+
+        // try to init sd card
+        SdFs sd;
+        SdSpiConfig sd_config(CONFIG_SD_PIN_CS, USER_SPI_BEGIN, SD_SCK_MHZ(CONFIG_SD_SPI_FREQ));
+        if (sd.begin(sd_config)) {
+
+            // get fs:FS filesystem for use with open_config_file()
+            // from https://github.com/greiman/SdFat/issues/471#issuecomment-2001960350
+            fs::FS sd_fs = fs::FS(fs::FSImplPtr(new SdFat32FSImpl(sd)));
+
+            // try to open and parse config file
+            bool res = open_config_file(sd_fs);
+            if (res) return true; // else continue with function
+
+            // end sd
+            sd.end();
+
+        } else logw(LOG_TAG, "Failed to initialise SD card");
+
+        // end spi
+        SPI.end();
+
     #endif
 
 
@@ -458,6 +432,9 @@ bool load_config() {
             // try to open and parse config file
             bool res = open_config_file(LittleFS);
             if (res) return true; // else continue with function
+
+            // end littlefs
+            LittleFS.end();
 
         } else logw(LOG_TAG, "Failed to initialise littlefs");
 
