@@ -46,6 +46,35 @@ This target depends on a couple of external programs:
 # `config.yml` reference
 This section of this document explains each of the things you can configure using `config.yml`.  [Example config files](../../extras/configs/) file are provided in the `extras` directory of this repository.
 
+## Deadzones and Beefzones
+Both of these can be specified in `config.yml`.  They each have their own top-level objects: `deadzones` and `beefzones` respectively.  Both them support the same set of integer-type keys for specifying zones for each analog input:
+
+- `lx`, `ly`, `rx`, `ry` are zones for the X and Y axes of the left and right analog sticks
+- `brake` and `throttle` are zones for the brake trigger (L2) and throttle trigger (R2)
+
+All of these keys are optional, and default values are specified in [`config.cpp`](../../bbrx/config.cpp).
+
+For example:
+```yaml
+deadzones:
+  ly: 32
+  lx: 32
+  ry: 32
+  rx: 32
+  brake: 64
+  throttle: 64
+
+beefzones:
+  ly: 500
+  lx: 500
+  ry: 500
+  rx: 500
+  brake: 1000
+  throttle: 1000
+```
+
+For more info on what deadzones and... beefzones.. are, please check out their docs on the [Events and Binding](events.md#deadzones-and-beefzones) page.
+
 ## Bindings
 The heart of bbrx, bindings are expressed as a list of objects under the `bindings` top-level key.  The keys / properties that each object can contain are listed below:
 
@@ -73,8 +102,8 @@ Please also note that the values for each key are expected to be of certain data
 
 If any property does not match it's expected data type, it won't be included in the binding definition.  If any required properties are missing or fail to parse, then the entire binding will not be registered.
 
-## Example Config Snippets
-### Basic ESC Control with left analog stick
+### Example Bindings
+#### Basic ESC Control with left analog stick
 This example assumes you have an ESC which takes in two servo PWM channels to control the speed and direction of a few motors.  It binds the Y axis of the left analog stick to pin 12 ("channel 1") and the X axis to pin 13 ("channel 2"), allowing you to use the left stick to control the speed and direction of the motors.
 
 ```yaml
@@ -94,7 +123,7 @@ bindings:
   pin: 13
 ```
 
-### Analog Speed Control
+#### Analog Speed Control
 This binding provides a way to manually set the speed separately from the direction.  With most ESCs, you can use `BB_ACTION_SERVO` action with two output channels to determine both the direction and speed of the motors on it's own.  However it might be useful in some cases to be able to control the speed separately (think about how in a car, the steering wheel controls direction, and the accelerator controls speed).
 
 This binds the throttle (R2) directly to the speed control variable, so that when the throttle is neutral the speed is set to zero.  Even if the servo action is bound, nothing will happen.  When the throttle is fully pressed, the speed is set to it's max value (based on the min and max ESC PWM values), even if there's no input to the servo action.  This makes the throttle act kind of like an accelerator!

@@ -75,15 +75,21 @@ extern std::vector<bb_binding> bindings;
 // deadzone is the value below which the input defaults to 0
 // beefzone is the value above which the input defaults to max(range_min, range_max), _and_
 //             the value _below_ which the input defaults to min(range_min, range_max)
-#define DEADZONE_LY             32      // inner deadzone for the left analog stick y axis
-#define BEEFZONE_LY             500     // outer deadzone for the left analog stick y axis
-#define DEADZONE_LX             32      // inner deadzone for the left analog stick x axis
-#define BEEFZONE_LX             500     // outer deadzone for the left analog stick x axis
 
-#define DEADZONE_BRAKE          64      // inner deadzone for the analog brake (L2)
-#define BEEFZONE_BRAKE          1000    // outer deadzone for the analog brake (L2)
-#define DEADZONE_THROTTLE       64      // inner deadzone for the analog throttle (R2)
-#define BEEFZONE_THROTTLE       1000    // outer deadzone for the analog throttle (R2)
+extern int32_t DEADZONE_LY;         // inner deadzone for the left analog stick y axis
+extern int32_t BEEFZONE_LY;         // outer deadzone for the left analog stick y axis
+extern int32_t DEADZONE_LX;         // inner deadzone for the left analog stick x axis
+extern int32_t BEEFZONE_LX;         // outer deadzone for the left analog stick x axis
+
+extern int32_t DEADZONE_RY;         // inner deadzone for the left analog stick y axis
+extern int32_t BEEFZONE_RY;         // outer deadzone for the left analog stick y axis
+extern int32_t DEADZONE_RX;         // inner deadzone for the left analog stick x axis
+extern int32_t BEEFZONE_RX;         // outer deadzone for the left analog stick x axis
+
+extern int32_t DEADZONE_BRAKE;      // inner deadzone for the analog brake (L2)
+extern int32_t BEEFZONE_BRAKE;      // outer deadzone for the analog brake (L2)
+extern int32_t DEADZONE_THROTTLE;   // inner deadzone for the analog throttle (R2)
+extern int32_t BEEFZONE_THROTTLE;   // outer deadzone for the analog throttle (R2)
 
 
 //-------------------------------------------

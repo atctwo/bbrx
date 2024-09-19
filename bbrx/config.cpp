@@ -1,6 +1,3 @@
-// #define RYML_SINGLE_HDR_DEFINE_NOW
-// #include "ryml.hpp"
-
 #include <stddef.h>
 #include <memory>
 #include <vector>
@@ -25,6 +22,21 @@
 #endif
 
 #define LOG_TAG "config"
+
+int32_t DEADZONE_LY         = 32;      // inner deadzone for the left analog stick y axis
+int32_t BEEFZONE_LY         = 500;     // outer deadzone for the left analog stick y axis
+int32_t DEADZONE_LX         = 32;      // inner deadzone for the left analog stick x axis
+int32_t BEEFZONE_LX         = 500;     // outer deadzone for the left analog stick x axis
+
+int32_t DEADZONE_RY         = 32;      // inner deadzone for the right analog stick y axis
+int32_t BEEFZONE_RY         = 500;     // outer deadzone for the right analog stick y axis
+int32_t DEADZONE_RX         = 32;      // inner deadzone for the right analog stick x axis
+int32_t BEEFZONE_RX         = 500;     // outer deadzone for the right analog stick x axis
+
+int32_t DEADZONE_BRAKE      = 64;      // inner deadzone for the analog brake (L2)
+int32_t BEEFZONE_BRAKE      = 1000;    // outer deadzone for the analog brake (L2)
+int32_t DEADZONE_THROTTLE   = 64;      // inner deadzone for the analog throttle (R2)
+int32_t BEEFZONE_THROTTLE   = 1000;    // outer deadzone for the analog throttle (R2)
 
 /**
  * @brief A vector containing all currently registered bindings.
@@ -98,6 +110,89 @@ bool parse_config(std::string yaml) {
             std::string test = root["test"].get_value<std::string>();
             logd(LOG_TAG, "config test string: %s", test.c_str());
         }
+
+
+        // get deadzones object
+        if (check_key(root, "deadzones", fkyaml::node::node_t::MAPPING)) {
+
+            logd(LOG_TAG, "loading deadzones...");
+            auto &deadzones = root["deadzones"];
+
+            if (check_key(deadzones, "ly", fkyaml::node::node_t::INTEGER)) {
+                DEADZONE_LY = deadzones["ly"].get_value<int32_t>();
+                logd(LOG_TAG, "- ly = %d", DEADZONE_LY);
+            } else logd(LOG_TAG, "- couldn't get ly");
+
+            if (check_key(deadzones, "lx", fkyaml::node::node_t::INTEGER)) {
+                DEADZONE_LX = deadzones["lx"].get_value<int32_t>();
+                logd(LOG_TAG, "- lx = %d", DEADZONE_LX);
+            } else logd(LOG_TAG, "- couldn't get lx");
+
+            if (check_key(deadzones, "ry", fkyaml::node::node_t::INTEGER)) {
+                DEADZONE_RY = deadzones["ry"].get_value<int32_t>();
+                logd(LOG_TAG, "- ry = %d", DEADZONE_RY);
+            } else logd(LOG_TAG, "- couldn't get ry");
+
+            if (check_key(deadzones, "rx", fkyaml::node::node_t::INTEGER)) {
+                DEADZONE_RX = deadzones["rx"].get_value<int32_t>();
+                logd(LOG_TAG, "- rx = %d", DEADZONE_RX);
+            } else logd(LOG_TAG, "- couldn't get rx");
+
+            if (check_key(deadzones, "brake", fkyaml::node::node_t::INTEGER)) {
+                DEADZONE_BRAKE = deadzones["brake"].get_value<int32_t>();
+                logd(LOG_TAG, "- brake = %d", DEADZONE_BRAKE);
+            } else logd(LOG_TAG, "- couldn't get brake");
+
+            if (check_key(deadzones, "throttle", fkyaml::node::node_t::INTEGER)) {
+                DEADZONE_THROTTLE = deadzones["throttle"].get_value<int32_t>();
+                logd(LOG_TAG, "- throttle = %d", DEADZONE_THROTTLE);
+            } else logd(LOG_TAG, "- couldn't get throttle");
+
+            // newline
+            logd(LOG_TAG, "");
+
+        } else logd(LOG_TAG, "failed to load deadzones");
+
+        // get beefzones object
+        if (check_key(root, "beefzones", fkyaml::node::node_t::MAPPING)) {
+
+            logd(LOG_TAG, "loading beefzones...");
+            auto &beefzones = root["beefzones"];
+
+            if (check_key(beefzones, "ly", fkyaml::node::node_t::INTEGER)) {
+                BEEFZONE_LY = beefzones["ly"].get_value<int32_t>();
+                logd(LOG_TAG, "- ly = %d", BEEFZONE_LY);
+            } else logd(LOG_TAG, "- couldn't get ly");
+
+            if (check_key(beefzones, "lx", fkyaml::node::node_t::INTEGER)) {
+                BEEFZONE_LX = beefzones["lx"].get_value<int32_t>();
+                logd(LOG_TAG, "- lx = %d", BEEFZONE_LX);
+            } else logd(LOG_TAG, "- couldn't get lx");
+
+            if (check_key(beefzones, "ry", fkyaml::node::node_t::INTEGER)) {
+                BEEFZONE_RY = beefzones["ry"].get_value<int32_t>();
+                logd(LOG_TAG, "- ry = %d", BEEFZONE_RY);
+            } else logd(LOG_TAG, "- couldn't get ry");
+
+            if (check_key(beefzones, "rx", fkyaml::node::node_t::INTEGER)) {
+                BEEFZONE_RX = beefzones["rx"].get_value<int32_t>();
+                logd(LOG_TAG, "- rx = %d", BEEFZONE_RX);
+            } else logd(LOG_TAG, "- couldn't get rx");
+
+            if (check_key(beefzones, "brake", fkyaml::node::node_t::INTEGER)) {
+                BEEFZONE_BRAKE = beefzones["brake"].get_value<int32_t>();
+                logd(LOG_TAG, "- brake = %d", BEEFZONE_BRAKE);
+            } else logd(LOG_TAG, "- couldn't get brake");
+
+            if (check_key(beefzones, "throttle", fkyaml::node::node_t::INTEGER)) {
+                BEEFZONE_THROTTLE = beefzones["throttle"].get_value<int32_t>();
+                logd(LOG_TAG, "- throttle = %d", BEEFZONE_THROTTLE);
+            } else logd(LOG_TAG, "- couldn't get throttle");
+
+            // newline
+            logd(LOG_TAG, "");
+
+        } else logd(LOG_TAG, "failed to load beefzones");
 
         // get bindings object
         if (check_key(root, "bindings", fkyaml::node::node_t::SEQUENCE)) {

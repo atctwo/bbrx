@@ -42,11 +42,7 @@ As with most software that handles analog gamepad input, bbrx implements deadzon
 
 This is technically an _inner deadzone_, but bbrx also supports _outer deadzones_.  This is the value above which all input is considered to be `max`.  For example, say you had a controller where the analog stick maxed out at 508.  This would mean you would never be able to get to the max value of 512, but if 508 is within the outer deadzone it will be considered as 512.  Within bbrx, the outer deadzone is uniquely referred to as **the beefzone** [this was a fun name I used since i didn't know what else to call it.  it comes from the hexadecimal number `0xDEADBEEF`]
 
-Deadzones and beefzones are defined for each analog input in config.h.  Their defines follow the naming scheme
-```c
-#define DEADZONE_<input_name>
-#define BEEFZONE_<input_name>
-```
+Deadzones and beefzones can be specified [in the `config.yml` config file](config.md#deadzones-and-beefzones), but default values are specified in [`config.cpp`](../../bbrx/config.cpp).
 
 ## What happens when no controllers are connected?
 When the event manager runs each binding, and there aren't any controllers connected, it does one of two things depending on the value of the binding parameter `exec_without_controller`:
