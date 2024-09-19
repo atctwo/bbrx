@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include "controllers.h"
 #include "event_manager.h"
+#include "status_led.h"
 #include "log.h"
 #include "config.h"
 
@@ -20,6 +21,10 @@ void setup() {
     #endif
     logi(LOG_TAG, "");
 
+    // setup the status led
+    leds_setup();
+    leds_set_state(LED_LOADING);
+
     // this will load the user config from the configured filesystem
     // (or will just leave the defaults if this fails).
     // either way, once this function finishes, a bindset will be set up but not initialised
@@ -35,11 +40,17 @@ void setup() {
     for (auto b : bindings) {
         initialise_binding(b);
     }
+
+    // done!  now set the status led to idle
+    leds_set_state(LED_IDLE);
 }
 
 void loop() {
 
     // parse controller input and perform bound actions
     event_manager_update();
+
+    // let the status led update
+    leds_update();
 
 }

@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Bluepad32.h>
+#include "status_led.h"
 #include "log.h"
 #include "config.h"
 
@@ -35,6 +36,9 @@ void controller_callback_connected(ControllerPtr ctl) {
         // set LED colour
         ctl->setColorLED(0x00, 0xCE, 0xD1);
 
+        // set status led
+        leds_set_state(LED_CONNECTED);
+
     }
     else {
         logw(LOG_TAG, "Attempted to connect to new controller, but couldn't because already connected to a different one");
@@ -53,6 +57,9 @@ void controller_callback_disconnected(ControllerPtr ctl) {
     if (ctl == controller) {
         logi(LOG_TAG, "Controller disconnected!");
         controller = nullptr;
+
+        // set status led
+        leds_set_state(LED_IDLE);
     } else {
         logw(LOG_TAG, "Mysterious unknown gamepad disconnected");
     }

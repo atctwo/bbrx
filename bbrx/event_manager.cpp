@@ -4,6 +4,7 @@
 #include <ESP32Servo.h>
 #include "event_manager.h"
 #include "controllers.h"
+#include "status_led.h"
 #include "log.h"
 #include "config.h"
 
@@ -191,7 +192,7 @@ void perform_action(int32_t event_value, bb_binding bind, ControllerPtr controll
             break;
 
         case BB_ACTION_SPEED_DOWN:
-            logd(LOG_TAG, "im tired value=%d min=%d max=%d", event_value, bind.min, bind.max);
+            // logv(LOG_TAG, "im tired value=%d min=%d max=%d", event_value, bind.min, bind.max);
             if (event_value > ((bind.max - bind.min) / 2) + bind.min) {
                 speed_limit++;
                 if (speed_limit > (ESC_PWM_MAX-ESC_PWM_MIN)/2) speed_limit = (ESC_PWM_MAX-ESC_PWM_MIN)/2;
@@ -209,8 +210,14 @@ void perform_action(int32_t event_value, bb_binding bind, ControllerPtr controll
         case BB_ACTION_BRAKE:
 
             input = (event_value > ((bind.max - bind.min) / 2) + bind.min);
-            if (!brake && input) logi(LOG_TAG, "Breaking!");
-            if (brake && !input) logi(LOG_TAG, "Stepping off the breaks...");
+            if (!brake && input) {
+                logi(LOG_TAG, "Breaking!");
+                leds_set_state(LED_BRAKE);
+            }
+            if (brake && !input) {
+                logi(LOG_TAG, "Stepping off the breaks...");
+                leds_set_state_previous();
+            }
 
             brake = input;
 

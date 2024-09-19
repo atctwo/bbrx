@@ -84,3 +84,14 @@ extern std::vector<bb_binding> bindings;
 #define BEEFZONE_BRAKE          1000    // outer deadzone for the analog brake (L2)
 #define DEADZONE_THROTTLE       64      // inner deadzone for the analog throttle (R2)
 #define BEEFZONE_THROTTLE       1000    // outer deadzone for the analog throttle (R2)
+
+
+//-------------------------------------------
+// Status LED
+//-------------------------------------------
+
+#define STATUS_LED_PIN              5
+#define STATUS_LED_POWER_PIN        8
+#define STATUS_NUM_LEDS             1
+#define STATUS_LED_TYPE             NEOPIXEL
+#define STATUS_LED_INIT_BRIGHTNESS  35

@@ -32,10 +32,11 @@ setup:
 	@$(CLI) core install $(BOARD) --additional-urls $(BOARD_PKG_ESP32),$(BOARD_PKG_BP32)
 	@$(CLI) lib install ESP32Servo
 	@$(CLI) lib install SdFat@2.2.2
+	@$(CLI) lib install FastLED
 
 # build sketch using arduino-cli
 build:
-	@$(CLI) compile --fqbn $(FQBN) --build-property build.extra_flags=-DGIT_HASH=\"${GIT_HASH}\" --build-property compiler.cpp.extra_flags=-fexceptions --build-path ${CLI_BUILD_PATH} $(SKETCH_NAME)
+	@$(CLI) compile --fqbn $(FQBN) --build-property build.extra_flags+=-DGIT_HASH=\"${GIT_HASH}\" --build-path ${CLI_BUILD_PATH} $(SKETCH_NAME)
 
 # upload sketch using arduino-cli
 upload:

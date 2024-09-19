@@ -3,7 +3,7 @@ This is a list of all the planned features of bbrx.
 
 ## Features
 - [ ] Feedback (eg: led colour, rumble)
-- [ ] On-board WS2812 status
+- [x] On-board WS2812 status
 - [ ] event repeat timing
 - [ ] cumulative bindings
 - [ ] GPIO action
@@ -22,7 +22,7 @@ This is a list of all the planned features of bbrx.
     - [x] deadzones
     - [x] servo pin limits
     - [x] how to write config.yml files 
-  - [ ] document config file loading approach
+  - [x] document config file loading approach
   - [x] move docs into usage folder
 - developer docs
   - [ ] binding implementation (and also i guess how to write _default_ bindings)
@@ -30,7 +30,7 @@ This is a list of all the planned features of bbrx.
   - [ ] how each action is implemented
 - [x] credits on readme
 - [x] docs index
-- [ ] tidy up comments on config.h
+- [x] tidy up comments on config.h
 
 
 # Cumulative Binding ideas
