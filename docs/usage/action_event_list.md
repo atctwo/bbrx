@@ -11,6 +11,7 @@ This document contains a big list of every implemented action and event.  Detail
 | `BB_ACTION_SPEED_DOWN`    | Digital    | Increases the speed limit                                           |
 | `BB_ACTION_SPEED_SET`     | Analog     | Sets the motor speed directly                                       |
 | `BB_ACTION_BRAKE`         | Digital    | Enables or disables the breaks                                      |
+| `BB_ACTION_GPIO`          | Digital    | Writes a digital output to a GPIO pin
 
 Actions are split into two types based on input type:
 - **Analog** actions expect a continuous range (in the mathematical sense) of values between `min` and `max`
@@ -46,6 +47,9 @@ This is an alternative way of setting the speed limit.  This action takes a cont
 
 ## Brake (`BB_ACTION_BRAKE`)
 If the input to this action resolves as true, then all motors will be stopped immediately.  This overrides everything else including speed control.
+
+## GPIO Output (`BB_ACTION_GPIO`)
+This action reads the event value as a digital input, then simply writes that value as a digital output to the specified GPIO pin.  This can be used for general purpose applications like powering an LED when a button is pressed.
 
 # Events (`bb_event`)
 Gamepad events are based on the inputs exposed by Bluepad32, which bbrx depends on for gamepad support.  Input naming is also carried over directly from BP32.

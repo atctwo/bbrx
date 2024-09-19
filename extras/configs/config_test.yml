@@ -1,5 +1,21 @@
 # bbrx config.yml test
 
+deadzones:
+  ly: 32
+  lx: 32
+  ry: 32
+  rx: 32
+  brake: 64
+  throttle: 64
+
+beefzones:
+  ly: 500
+  lx: 500
+  ry: 500
+  rx: 500
+  brake: 1000
+  throttle: 1000
+
 bindings:
 # servo channel 1
 - action: BB_ACTION_SERVO
@@ -54,3 +70,10 @@ bindings:
   event: BB_EVENT_BTN_A
   min: 0
   max: 1
+
+# gpio test
+- action: BB_ACTION_GPIO
+  event: BB_EVENT_BTN_B
+  min: 0
+  max: 1
+  pin: 25

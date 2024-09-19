@@ -68,6 +68,12 @@ void initialise_binding(bb_binding b) {
         servos[b.pin] = *servo;
     }
 
+    // if a pin is registered for a gpio action, set that pin to be an outout
+    if (b.action == BB_ACTION_GPIO) {
+        pinMode(b.pin, OUTPUT);
+        digitalWrite(b.pin, LOW);
+    }
+
     logi(LOG_TAG, "Initialised binding %d: action=%d, event=%d, min=%d, max=%d", bind_count++, b.action, b.event, b.min, b.max);
 }
 
@@ -222,6 +228,12 @@ void perform_action(int32_t event_value, bb_binding bind, ControllerPtr controll
             brake = input;
 
             break;
+
+        case BB_ACTION_GPIO:
+            input = (event_value > ((bind.max - bind.min) / 2) + bind.min);
+            digitalWrite(bind.pin, (bool) input);
+            break;
+
 
         default:
             logw(LOG_TAG, "Tried to call unsupported action (action=%d)", bind.action);

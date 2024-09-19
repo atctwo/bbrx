@@ -6,7 +6,7 @@ This is a list of all the planned features of bbrx.
 - [x] On-board WS2812 status
 - [ ] event repeat timing
 - [ ] cumulative bindings
-- [ ] GPIO action
+- [x] GPIO action
 - [ ] CI to test pushes to github
 - [x] Load config from file
 - [x] SD support
