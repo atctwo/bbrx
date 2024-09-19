@@ -5,7 +5,8 @@ This document contains a big list of every implemented action and event.  Detail
 
 | Action                    | Input Type | Description                                                         |
 |---------------------------|------------| --------------------------------------------------------------------|
-| `BB_ACTION_TEST`          | Digital    | Prints a test message over serial                                   |
+| `BB_ACTION_TEST`          | Digital    | Outputs a test message to the debug-level logger                    |
+| `BB_ACTION_DEBUG_VALUE`   | Analog     | Prints the input value to the debug-level logger                    |
 | `BB_ACTION_SERVO`         | Analog     | Controls the PWM output of a servo channel over the specified pin   |
 | `BB_ACTION_SPEED_UP`      | Digital    | Decreases the speed limit                                           |
 | `BB_ACTION_SPEED_DOWN`    | Digital    | Increases the speed limit                                           |
@@ -22,6 +23,10 @@ Prints a friendly test message.  This is used for development purposes, and opti
 ```plain
 event manager test!!! pin=<pin number of binding>
 ```
+Note that the message is printed to the _debug-level logger_, meaning it will only be printed if debug-level logging is enabled
+
+## Debug Value (`BB_ACTION_DEBUG_VALUE`)
+Similarly to Test Message, this simply prints the current event value to the debug-level logger.  Output from this action can only be seen if debug-level logging is enabled.
 
 ## Servo PWM (`BB_ACTION_SERVO`)
 Most ESCs used in hobbyist RC projects expect motor control signals to be pulse width modulated (PWM).  Specifically, they expect the same type of signal that you would use to control the position of a servo motor, where the position is relative to the pulse width.  Servos typically expect a PWM signal of 50 Hz, where a pulse lasting 1000µs puts the servo at -90°, a pulse lasting 2000µs puts the servo at +90°, and a pulse at 1500µs puts the motor at 0°.  ESCs don't control the position of a motor, instead they control how fast the motor is going; 1000µs means reverse at full speed, 2000µs means forward at full speed, and 1500µs means stop.

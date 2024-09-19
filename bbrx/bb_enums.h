@@ -72,6 +72,7 @@ inline std::vector<std::string> split(std::string& s, std::string& delimiter) {
  */
 ENUM_MACRO(bb_action,
     BB_ACTION_TEST,
+    BB_ACTION_DEBUG_VALUE,
     BB_ACTION_SERVO,
     BB_ACTION_SPEED_UP,
     BB_ACTION_SPEED_DOWN,

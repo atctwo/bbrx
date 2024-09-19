@@ -177,6 +177,10 @@ void perform_action(int32_t event_value, bb_binding bind, ControllerPtr controll
 
             break;
 
+        case BB_ACTION_DEBUG_VALUE:
+            logd(LOG_TAG, "value=%d", event_value);
+            break;
+
         case BB_ACTION_SERVO:
 
             out = map(event_value, bind.min, bind.max, ESC_PWM_MIN + speed_limit, ESC_PWM_MAX - speed_limit);
