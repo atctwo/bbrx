@@ -1,12 +1,7 @@
 # Events and Binding
-bbrx allows users to "bind" **receiver actions** to zero or more **gamepad events**.  This means that users can configure bbrx depending on their specific controller and device.  An example set of binds could be:
-- bind servo channel 1 to Left Analog Y
-- bind servo channel 2 to Left Analog X
-- bind servo channel 3 to L2
-- bind servo channel 3 to R2
-- bind D-Pad Up to Max Speed Increase
-- bind D-Pad Down to Max Speed Decrease
-- bind A to Break
+bbrx allows users to "bind" **receiver actions** to zero or more **gamepad events**.  This means that users can configure bbrx depending on their specific controller and device.  An example set of binds is shown in the following diagram:
+
+![A diagram showing an example bind set, binding servo channel 1 to left analog stick axis x, servo channel 2 to left analog stick y, servo channel 3 to both the brake and throttle triggers, d-pad up to max speed increase, d-pad down to max speed decrease, and the A button to break](../../extras/images/bbrx_binding_example.svg)
 
 There are a number of ways in which each binding can be configured, since different actions will require different parameters based on input.  This document explains (in maybe too much detail) what each parameter does, how it works, and how to consider what values you might need in your case.
 
