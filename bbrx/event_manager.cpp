@@ -109,8 +109,8 @@ int32_t get_event_value(bb_event event, ControllerPtr controller, int32_t min, i
     switch(event) {
         case BB_EVENT_ANALOG_LX:            return deadzone(controller->axisX(),    DEADZONE_LX,       BEEFZONE_LX,       min, max);
         case BB_EVENT_ANALOG_LY:            return deadzone(controller->axisY(),    DEADZONE_LY,       BEEFZONE_LY,       min, max);
-        case BB_EVENT_ANALOG_RX:            return deadzone(controller->axisRX(),   DEADZONE_LX,       BEEFZONE_LX,       min, max);
-        case BB_EVENT_ANALOG_RY:            return deadzone(controller->axisRY(),   DEADZONE_LY,       BEEFZONE_LY,       min, max);
+        case BB_EVENT_ANALOG_RX:            return deadzone(controller->axisRX(),   DEADZONE_RX,       BEEFZONE_RX,       min, max);
+        case BB_EVENT_ANALOG_RY:            return deadzone(controller->axisRY(),   DEADZONE_RY,       BEEFZONE_RY,       min, max);
         case BB_EVENT_ANALOG_BRAKE:         return deadzone(controller->brake(),    DEADZONE_BRAKE,    BEEFZONE_BRAKE,    min, max);
         case BB_EVENT_ANALOG_THROTTLE:      return deadzone(controller->throttle(), DEADZONE_THROTTLE, BEEFZONE_THROTTLE, min, max);
         case BB_EVENT_GYRO_X:               return controller->gyroX();
