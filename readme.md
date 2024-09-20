@@ -1,5 +1,11 @@
-# bbrx
-Hello!  This is an Arduino-based receiver for radio-controlled devices like drones or quadcopters or battlebots, except instead of using the type of RF signals a flight controller uses, *bbrx uses any Bluetooth gamepad*.
+# bbrx!
+Hello!  This is a receiver for radio-controlled devices like drones or quadcopters or battlebots, except instead of using the type of RF signals a flight controller uses, *bbrx uses [any Bluetooth gamepad](https://bluepad32.readthedocs.io/en/latest/supported_gamepads/)*.
+
+<div align="center">
+    <img src="extras/images/bbrx_controllers.svg" alt="diagram showing multiple bluetooth controllers sending data to bbrx, which then sends data to an electronic speed controller, which is driving a motor">
+</div>
+
+bbrx is written with the [Arduino](https://arduino.cc/) framework, using the [Bluepad32](https://github.com/ricardoquesada/bluepad32) controller library, and is designed for [ESP32](https://www.espressif.com/en/products/socs/esp32) microcontroller boards.
 
 # Background
 This project started as a way to control a Battlebot I was building.  Many Battlebots are designed to receive commands from standard flight controllers like those you would use with drones or quadcopters.  These controllers communicate with receiver modules using one of many different RF protocols.  The receivers often produce a PWM output in response to the commands sent by the controllers, usually as input to an Electronic Speed Controller (ESC).
@@ -9,6 +15,7 @@ I didn't a flight controller, but I had lots of ESP32 boards laying around and a
 # Features
 Progress is being tracked in [todo.md](./todo.md); for now here is a list of completed features:
 - outputs servo PWM used by most ESCs
+- reads input from [multiple different types of Bluetooth gamepad](https://bluepad32.readthedocs.io/en/latest/supported_gamepads/)
 - highly configurable [binding system](./docs/usage/events.md) where any action can be bound to any gamepad input
 - bindings and other [configuration settings](./docs/usage/config.md) can be loaded from an SD card or a LittleFS partition in flash
 - real-time speed control actions
