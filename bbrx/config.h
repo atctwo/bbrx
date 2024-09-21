@@ -97,7 +97,7 @@ extern int32_t BEEFZONE_THROTTLE;   // outer deadzone for the analog throttle (R
 //-------------------------------------------
 
 #define STATUS_LED_PIN              5
-#define STATUS_LED_POWER_PIN        8
+// #define STATUS_LED_POWER_PIN        8        // please make sure this doesn't conflict with anything else because it will be pulled high for the duration of the program
 #define STATUS_NUM_LEDS             1
 #define STATUS_LED_TYPE             NEOPIXEL
 #define STATUS_LED_INIT_BRIGHTNESS  35
