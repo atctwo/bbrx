@@ -36,7 +36,7 @@
 
 #define CONFIG_FILE_PATH            "/config.yml"   // the path to the config file
 
-#define CONFIG_ENABLE_SD                            // enable checking the SD card for config.yml
+// #define CONFIG_ENABLE_SD                            // enable checking the SD card for config.yml
 #define CONFIG_SD_PIN_MISO          27
 #define CONFIG_SD_PIN_MOSI          13
 #define CONFIG_SD_PIN_SCLK          14
@@ -96,6 +96,7 @@ extern int32_t BEEFZONE_THROTTLE;   // outer deadzone for the analog throttle (R
 // Status LED
 //-------------------------------------------
 
+#define STATUS_LED_ENABLE
 #define STATUS_LED_PIN              5
 // #define STATUS_LED_POWER_PIN        8        // please make sure this doesn't conflict with anything else because it will be pulled high for the duration of the program
 #define STATUS_NUM_LEDS             1

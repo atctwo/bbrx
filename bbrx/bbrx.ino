@@ -43,6 +43,8 @@ void setup() {
 
     // done!  now set the status led to idle
     leds_set_state(LED_IDLE);
+
+    logi(LOG_TAG, "Setup complete!");
 }
 
 void loop() {
