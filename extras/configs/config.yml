@@ -1,0 +1,90 @@
+# bbrx config file
+# Replace the contents of this file with your own config!  Please refer to
+# the bbrx usage documentation on how to write config files, and to
+# extras/configs for example config files!
+
+
+deadzones:
+  ly: 40
+  lx: 40
+  ry: 40
+  rx: 40
+  brake: 64
+  throttle: 64
+
+beefzones:
+  ly: 500
+  lx: 500
+  ry: 500
+  rx: 500
+  brake: 1000
+  throttle: 1000
+
+bindings:
+
+- action: BB_ACTION_SERVO
+  event: BB_EVENT_ANALOG_LY
+  min: -512
+  max: 511
+  pin: 36
+
+
+- action: BB_ACTION_SERVO
+  event: BB_EVENT_ANALOG_LX
+  min: 511
+  max: -512
+  pin: 37
+
+
+- action: BB_ACTION_SERVO
+  event: BB_EVENT_ANALOG_RY
+  min: -512
+  max: 511
+  pin: 38
+
+
+- action: BB_ACTION_SERVO
+  event: BB_EVENT_ANALOG_RX
+  min: 511
+  max: -512
+  pin: 39
+
+
+- action: BB_ACTION_SERVO
+  event: BB_EVENT_ANALOG_THROTTLE
+  min: 1023
+  max: -1024
+  pin: 34
+
+
+- action: BB_ACTION_SERVO
+  event: BB_EVENT_ANALOG_BRAKE
+  min: 1023
+  max: -1024
+  pin: 35
+
+
+- action: BB_ACTION_GPIO
+  event: BB_EVENT_BTN_B
+  min: 0
+  max: 1
+  pin: 2
+
+
+- action: BB_ACTION_GPIO
+  event: BB_EVENT_BTN_Y
+  min: 0
+  max: 1
+  pin: 4
+
+- action: BB_ACTION_GPIO
+  event: BB_EVENT_BTN_A
+  min: 0
+  max: 1
+  pin: 17
+
+- action: BB_ACTION_GPIO
+  event: BB_EVENT_BTN_X
+  min: 0
+  max: 1
+  pin: 16
