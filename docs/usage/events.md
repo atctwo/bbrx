@@ -50,6 +50,8 @@ Normally this would be a huge issue for motors; if your controller runs out of b
 ### `exec_without_controller` is true
 In this case, the bound action will be executed irrespective of how many controllers are connected.  Since there's no controller to provide an input value for the action, a default of value is assumed.  The default value used itself has a default value of 0, but this caan be overridden on a per-binding basis by setting the `default` property of the value.
 
+In either case, the outcome of [conditional event checks](#conditional-events) takes priority over this parameter.
+
 ## Action Claiming
 What happens when an action is triggered by two separate simultaneous input events?  Without action claiming, the bindings for both events will run at the same time, so each action will be run twice, against both inputs.  This could be a problem for things like motors; if one binding is telling the motor to run at 100 RPM and one is telling it to run at -50 RPM, what happens?
 
@@ -76,3 +78,12 @@ The result of this is that no two inputs can control an action *at the same time
 >   - if the event value is *not* the default, it sets the claimed flag of the action
 >   - if the event value *is* the default, it clears the claimed flag
 >   - either way, the action will be executed as normal (pending [`exec_without_controller`](#what-happens-when-no-controllers-are-connected) and other conditions)
+
+## Conditional Events
+todo :p
+
+- for each conditional event, they must resolve as true before the action is executed
+  - an input is considered true if it's greater than the halfway point between min and max
+- if any conditional fails, the action is still executed but with the specified `default_value`
+- if `conditional_noexec` is true, the action isn't executed at all
+  - this means the last value the action was called with will hold

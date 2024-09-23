@@ -381,6 +381,127 @@ bool parse_config(std::string yaml) {
                     bin.ignore_claims = false;
                 }
 
+                //------------------------
+                // check for conditionals key
+                //------------------------
+                // conditionals can either be a string or a list of strings, so check both
+
+                // conditionals, string version
+                if (check_key(bind, "conditionals", fkyaml::node::node_t::STRING)) {
+
+                    // get conditionals as a string
+                    std::string conditionals_str = bind["conditionals"].get_value<std::string>();
+                    logd(LOG_TAG, "- conditional event string %s", conditionals_str.c_str());
+
+                    // try to get enum id (int) from string
+                    int conditionals_int = bb_event_to_enum(conditionals_str);
+                    logd(LOG_TAG, "- conditional event int %d", conditionals_int);
+
+                    // try to determine enum from int
+                    if (conditionals_int == -1) {
+
+                        logw(LOG_TAG, "invalid event for conditionals key in binding %d", i);
+                        has_required = false;
+
+                    } else {
+
+                        bb_event conditional_event = (bb_event) conditionals_int;
+                        logd(LOG_TAG, "- conditional enum %d", conditional_event);
+                        bin.conditionals.push_back(conditional_event);
+
+                    }
+
+                } else {
+                    logd(LOG_TAG, "- missing or invalid conditionals<string> key");
+                }
+
+                // conditionals, list of strings
+                if (check_key(bind, "conditionals", fkyaml::node::node_t::SEQUENCE)) {
+
+                    // for each item in sequence
+                    for (int j = 0; j < bind["conditionals"].size(); j++) {
+
+                        auto &conditional_item = bind["conditionals"][j];
+                        logd(LOG_TAG, "- parsing conditional %d", j);
+
+                        // get conditionals as a string
+                        std::string conditionals_str = conditional_item.get_value<std::string>();
+                        logd(LOG_TAG, "  - conditional event string %s", conditionals_str.c_str());
+
+                        // try to get enum id (int) from string
+                        int conditionals_int = bb_event_to_enum(conditionals_str);
+                        logd(LOG_TAG, "  - conditional event int %d", conditionals_int);
+
+                        // try to determine enum from int
+                        if (conditionals_int == -1) {
+
+                            logw(LOG_TAG, "invalid event (number %d) in conditionals list in binding %d", j, i);
+                            has_required = false;
+
+                        } else {
+
+                            bb_event conditional_event = (bb_event) conditionals_int;
+                            logd(LOG_TAG, "  - conditional enum %d", conditional_event);
+                            bin.conditionals.push_back(conditional_event);
+
+                        }
+                    }
+
+                } else {
+                    logd(LOG_TAG, "- missing or invalid conditionals<sequence> key");
+                }
+
+
+                //------------------------
+                // check for conditional_min key
+                //------------------------
+
+                if (check_key(bind, "conditional_min", fkyaml::node::node_t::INTEGER)) {
+
+                    // get conditional_min as an int
+                    int conditional_min = bind["conditional_min"].get_value<int>();
+                    logd(LOG_TAG, "- conditional_min int %d", conditional_min);
+                    bin.conditional_min = conditional_min;
+
+                } else {
+                    logd(LOG_TAG, "missing or invalid conditional_min key in binding %d", i);
+                    bin.conditional_min = 0;
+                }
+
+
+                //------------------------
+                // check for conditional_max key
+                //------------------------
+
+                if (check_key(bind, "conditional_max", fkyaml::node::node_t::INTEGER)) {
+
+                    // get conditional_max as an int
+                    int conditional_max = bind["conditional_max"].get_value<int>();
+                    logd(LOG_TAG, "- conditional_max int %d", conditional_max);
+                    bin.conditional_max = conditional_max;
+
+                } else {
+                    logd(LOG_TAG, "missing or invalid conditional_max key in binding %d", i);
+                    bin.conditional_max = 1;
+                }
+
+
+                //------------------------
+                // check for conditional_noexec key
+                //------------------------
+
+                if (check_key(bind, "conditional_noexec", fkyaml::node::node_t::BOOLEAN)) {
+
+                    // get conditional_noexec as an bool
+                    bool conditional_noexec = bind["conditional_noexec"].get_value<bool>();
+                    logd(LOG_TAG, "- conditional_noexec bool %d", conditional_noexec);
+                    bin.conditional_noexec = conditional_noexec;
+
+                } else {
+                    logd(LOG_TAG, "missing or invalid conditional_noexec key in binding %d", i);
+                    bin.conditional_noexec = false;
+                }
+
 
                 //------------------------
                 // after all params have been parsed, add to bindings (if all required params are passed)

@@ -20,6 +20,10 @@ struct bb_binding {
     uint8_t   pin;                                  // which pin to use as output
     bool      exec_without_controller;              // whether to execute the action if a controller isn't connected (with event value = 0)
     bool      ignore_claims;                        // if true, execute the bound action even if it is claimed by another binding
+    std::vector<bb_event> conditionals;             // array of events which must evaluate as true before the action can be called
+    int32_t   conditional_min;                      // minimum value of the range of inputs that the conditional event(s) could have
+    int32_t   conditional_max;                      // maximum value of the range of inputs that the conditional event(s) could have
+    bool      conditional_noexec;                   // if true, don't run the action when conditionals fail (otherwise do run with default value)
 };
 // note: if adding members to this struct make sure to add code in config.cpp:parse_config() to interpret the param from the config yaml file
 

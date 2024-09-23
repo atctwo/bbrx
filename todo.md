@@ -7,6 +7,7 @@ This is a list of all the planned features of bbrx.
 - [ ] cumulative bindings
 - [ ] update littlefs make target to read lfs size+offset from partitions.csv
 - [ ] pull + build mklittlefs automatically
+- [ ] a config setting to provide a default value for bindings with conditionals, for when the condition is false
 
 ### Possible Future Ideas
 - WebUSB-based website for uploading / downloading / modifying config.yml files from LittleFS

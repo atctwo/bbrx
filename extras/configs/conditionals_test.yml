@@ -1,0 +1,49 @@
+# config.yml to demonstrate how to use conditionals
+
+bindings:
+# speed control
+# these controls are gated behind the START button
+# ie: these bindings will only run if START is pressed
+# if START is released, these actions will still run, but with a
+# default value of 0
+- action: BB_ACTION_SPEED_UP
+  event: BB_EVENT_DPAD_UP
+  conditionals: BB_EVENT_BTN_START
+  min: 0
+  max: 1
+
+- action: BB_ACTION_SPEED_DOWN
+  event: BB_EVENT_DPAD_DOWN
+  conditionals: BB_EVENT_BTN_START
+  min: 0
+  max: 1
+
+# break
+# this control is gated behind the START and SELECT button
+# ie: it will only run if both START and SELECT are pressed
+# if START or SELECT are released, the action will still run, but with
+# a default value of 0
+- action: BB_ACTION_BRAKE
+  event: BB_EVENT_BTN_A
+  conditionals: [BB_EVENT_BTN_START, BB_EVENT_BTN_SELECT]
+  min: 0
+  max: 1
+
+# gpio test
+# this control is gated behind both the left and right analog sticks' Y axis.
+#
+# the min and max for the conditionals are set so that the sticks' neutral positions
+# register as false.  that is, the binding will only run if both sticks are held 
+# upwards, beyond the top quarter of their range (ie: their Y axes are < -256)
+#
+# if the conditionals become false, this binding will stop executing completely,
+# irrespective of the default value.  this is because conditional_noexec is true
+- action: BB_ACTION_DEBUG_VALUE
+  event: BB_EVENT_BTN_B
+  conditionals: [BB_EVENT_ANALOG_LY, BB_EVENT_ANALOG_RY]
+  min: 0
+  max: 1
+  pin: 25
+  conditional_min: 0
+  conditional_max: -512
+  conditional_noexec: true

@@ -285,14 +285,31 @@ void event_manager_update() {
                 // variable for storing value of the bound event
                 int32_t event_value = bind.default_value;
 
+                // flag to indicate whether any of the conditional event checks have failed
+                bool conditionals_passed = true;
+
                 // if controller is connected
                 if (controller != nullptr) {
 
-                    // determine the event value from the event type
-                    event_value = get_event_value(bind.event, controller, bind.min, bind.max);
+                    // check if each conditional event is true
+                    for (bb_event evt : bind.conditionals) {
+                        
+                        // get value of the conditional event
+                        int32_t evt_val = get_event_value(evt, controller, bind.conditional_min, bind.conditional_max);
 
-                }
-                // otherwise assume the default
+                        // is the event value greater than the halfway point between min and max?
+                        bool input = (evt_val > ((bind.max - bind.min) / 2) + bind.min);
+
+                        // if no, assume the conditional has failed
+                        if (!input) conditionals_passed = false;
+                    }
+
+                    if (conditionals_passed) {
+                        // determine the event value from the event type
+                        event_value = get_event_value(bind.event, controller, bind.min, bind.max);
+                    } // otherwise assume the default
+
+                } // otherwise assume the default
 
                 // set claim flag if not already claimed
                 // but only if the input is non-default
@@ -313,11 +330,19 @@ void event_manager_update() {
                     }
                 }
 
-                // perform the action if controller is connected, or exec without controller is enabled for this binding
-                if ((controller != nullptr) || bind.exec_without_controller) {
-                    logv(LOG_TAG, "acting value=%d", event_value);
-                    // Serial.printf("%d\t", event_value);
-                    perform_action(event_value, bind, controller);
+                // if the action should be performed, as per the conditional checks
+                // if noexec=false, it always runs the action
+                // if noexec=true,  it only runs the action if the checks succeed
+                if (conditionals_passed || !bind.conditional_noexec) {
+
+                    // perform the action if controller is connected, or exec without controller is enabled for this binding
+                    if ((controller != nullptr) || bind.exec_without_controller) {
+
+                        logv(LOG_TAG, "acting value=%d", event_value);
+                        // Serial.printf("%d\t", event_value);
+                        perform_action(event_value, bind, controller);
+                        
+                    }
                 }
 
             }

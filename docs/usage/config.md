@@ -88,6 +88,10 @@ The heart of bbrx, bindings are expressed as a list of objects under the `bindin
 | `pin`                         | no (unless the action has an output) | Which pin to produce the output on                                 |                                                                                                    |
 | `exec_without_controller`     | no                                   | Whether to execute the binding when no controller is connected     | [What happens when no controllers are connected?](events.md#what-happens-when-no-controllers-are-connected) |
 | `ignore_claims`               | no                                   | Whether to ignore claims made on an action-pin combination         | [Action Claiming](events.md#action-claiming)                                                                |
+| `conditionals`                | no                                   | Events which must evaluate as true for the action to occur         | [Conditional Events](events.md#conditional-events)                                     |
+| `conditional_min`             | no                                   | Minimum value of the range of inputs for conditional events        | [Conditional Events](events.md#conditional-events)                                     |
+| `conditional_max`             | no (default=1)                       | Maximum value of the range of inputs for conditional events        | [Conditional Events](events.md#conditional-events)                                     |
+| `condiitonal_noexec`          | no                                   | Maximum value of the range of inputs for conditional events        | [Conditional Events](events.md#conditional-events)                                     |
 
 For more info on what each of these actually do and how they work, check out their relevant sections in [the event system docs](events.md)!
 
@@ -99,6 +103,9 @@ Please also note that the values for each key are expected to be of certain data
   - also check the reference for the specific action to make sure it works with the specified pin!
 - `default_value` should also be an integer (ideally between `min` and `max`)
 - `exec_without_controller` and `ignore_claims` should be boolean (`true` or `false`)
+- `conditionals` should either be a supported gamepad event, or a sequence / list of events
+- `conditional_min` and `conditional_max`, like regular `min` and `max`, should be integers
+- `conditional_noexec` should be boolean
 
 If any property does not match it's expected data type, it won't be included in the binding definition.  If any required properties are missing or fail to parse, then the entire binding will not be registered.
 
