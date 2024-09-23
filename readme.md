@@ -10,7 +10,7 @@ bbrx is written with the [Arduino](https://arduino.cc/) framework, using the [Bl
 # Background
 This project started as a way to control a Battlebot I was building.  Many Battlebots are designed to receive commands from standard flight controllers like those you would use with drones or quadcopters.  These controllers communicate with receiver modules using one of many different RF protocols.  The receivers often produce a PWM output in response to the commands sent by the controllers, usually as input to an Electronic Speed Controller (ESC).
 
-I didn't a flight controller, but I had lots of ESP32 boards laying around and a PlayStation 5 controller.  So I decided to make this thing, which replaces the conventional receiver with a microcontroller with Bluetooth running Arduino, and replaces the flight controller with a standard Bluetooth gamepad.
+I didn't have a flight controller, but I did have lots of ESP32 boards laying around and a PlayStation 5 controller.  So I decided to make this thing, which replaces the conventional receiver with a microcontroller with Bluetooth running Arduino, and replaces the flight controller with a standard Bluetooth gamepad.
 
 # Features
 Progress is being tracked in [todo.md](./todo.md); for now here is a list of completed features:
