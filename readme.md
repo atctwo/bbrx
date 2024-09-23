@@ -27,7 +27,7 @@ Progress is being tracked in [todo.md](./todo.md); for now here is a list of com
 Documentation for all the features of bbrx, including how they inter-relate and how to configure _everything_, is provided in the [**`docs`**](./docs/) directory in the root of this repository.  These docs explain each feature in detail, and aim to provide a complete picture of how all the parts of bbrx operate.
 
 # Default Controls
-As mentioned above, bbrx supports dynamic binding of receiver actions to gamepad events.  This allows users to set up their own control schemes specific to their devices.  Bindings can be loaded from an SD card or from flash memory, but in the case where neither of these have a valid config file, bbrx includes a "default" mapping which should cover most applications.  The default bindings are as follows:
+As mentioned above, bbrx supports dynamic binding of receiver actions to gamepad events.  This allows users to set up their own control schemes specific to their devices.  Bindings can be loaded from an SD card or from flash memory, but in the case where neither of these have a valid config file, bbrx includes a "default" mapping which should cover most applications. Please take note that bbrx uses the Xbox gamepad layout. The default bindings are as follows:
 
 | Gamepad Input        | Action                      |
 |----------------------|-----------------------------|
