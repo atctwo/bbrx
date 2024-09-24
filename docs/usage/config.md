@@ -145,3 +145,21 @@ bindings:
   min: 1023
   max: 0
 ```
+
+#### Conditional Speed Control
+This example provides speed control bindings, where D-Pad Up is bound to Speed Up, and D-Pad down is bound to Speed Down.  However, both bindings are gated behind the START button; that is, they will only work when START is held down.
+
+```yaml
+bindings:
+- action: BB_ACTION_SPEED_UP
+  event: BB_EVENT_DPAD_UP
+  conditionals: BB_EVENT_BTN_START
+  min: 0
+  max: 1
+
+- action: BB_ACTION_SPEED_DOWN
+  event: BB_EVENT_DPAD_DOWN
+  conditionals: BB_EVENT_BTN_START
+  min: 0
+  max: 1
+```

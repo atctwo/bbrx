@@ -80,10 +80,25 @@ The result of this is that no two inputs can control an action *at the same time
 >   - either way, the action will be executed as normal (pending [`exec_without_controller`](#what-happens-when-no-controllers-are-connected) and other conditions)
 
 ## Conditional Events
-todo :p
+For any binding, you can specify one or more *conditional events*, generally called `conditionals`.  These are normal gamepad input events which must resolve as true before the action is allowed to execute.  Well, the action will still be executed as normal, except that if any conditionals fail then the binding's default value will be used instead of the actual value.  An input will "fail" if it's current value is less than the halfway point between the minimum and maximum values for conditionals in that binding, and will "pass" if the value is greater than it.
 
-- for each conditional event, they must resolve as true before the action is executed
-  - an input is considered true if it's greater than the halfway point between min and max
-- if any conditional fails, the action is still executed but with the specified `default_value`
-- if `conditional_noexec` is true, the action isn't executed at all
-  - this means the last value the action was called with will hold
+Basically this means that you can prevent an action from actually doing anything useful *unless* some other input condition is true.  For example, you could have Speed Up and Speed Down mapped to D-Pad Up and D-Pad down respectively, but gated behind the START button.  The speed change actions will still fire (as usual) except they will always assume the D-Pad buttons are not pressed.  When START is then held down, the actions will start listening to the actual value of the D-Pad buttons.
+
+Check out the [config documentation](config.md#conditional-speed-control) and [example configs](../../extras/configs/conditionals_test.yml) for examples of how to use this feature!
+
+> [!TIP]
+> **Conditional Min and Max**
+> In the same way that regular events do, conditional events require prior knowledge of the minimum and maximum values of their input range to process.  In a binding, you would use `min` and `max` to specify the range of a regular event.  Similarly, you can use **`conditional_min`** and **`conditional_max`** to specify the input range of conditional events.
+>
+> This allows you to mix and match ranges between regular and conditional events.  For example, your regular event could be an analog stick with a range from -511 to 512, where the conditional event could have a range of 0 to 1.
+
+> [!TIP]
+> **What If I Don't Want The Action To Be Executed At All?**
+> The default behaviour when any conditionals fail is for the action to still run, but with the binding's default value.  But if you want, it is possible to prevent the action from running entirely when any conditionals fail, by including `conditional_noexec: true` in your binding.
+>
+> Consider that when your action runs, it produces some state (eg: a GPIO action pulls a pin high).  When `noexec` is enabled, and a conditional starts failing, the action stops running completely.  The state produced by the action will hold (ie: the GPIO pin *will still be high*, if it was high when the conditional started failing).  
+> 
+> This is usually not an issue, but consider the speed control example above.  If someone is holding START and D-Pad up, then lets go of START before letting go of D-Pad up, then the Speed Up action will keep running as if D-Pad up was still pressed!  `noexec` isn't the default behaviour for this reason, but it could be useful in certain circumstances, like if you wanted a way to "latch" an action on or off.
+
+> [!NOTE]
+> This feature was suggested by NerdsCorp in [#2](https://github.com/atctwo/bbrx/issues/2)
