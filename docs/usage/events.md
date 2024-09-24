@@ -88,12 +88,14 @@ Check out the [config documentation](config.md#conditional-speed-control) and [e
 
 > [!TIP]
 > **Conditional Min and Max**
+> 
 > In the same way that regular events do, conditional events require prior knowledge of the minimum and maximum values of their input range to process.  In a binding, you would use `min` and `max` to specify the range of a regular event.  Similarly, you can use **`conditional_min`** and **`conditional_max`** to specify the input range of conditional events.
 >
 > This allows you to mix and match ranges between regular and conditional events.  For example, your regular event could be an analog stick with a range from -511 to 512, where the conditional event could have a range of 0 to 1.
 
 > [!TIP]
 > **What If I Don't Want The Action To Be Executed At All?**
+> 
 > The default behaviour when any conditionals fail is for the action to still run, but with the binding's default value.  But if you want, it is possible to prevent the action from running entirely when any conditionals fail, by including `conditional_noexec: true` in your binding.
 >
 > Consider that when your action runs, it produces some state (eg: a GPIO action pulls a pin high).  When `noexec` is enabled, and a conditional starts failing, the action stops running completely.  The state produced by the action will hold (ie: the GPIO pin *will still be high*, if it was high when the conditional started failing).  
@@ -101,4 +103,4 @@ Check out the [config documentation](config.md#conditional-speed-control) and [e
 > This is usually not an issue, but consider the speed control example above.  If someone is holding START and D-Pad up, then lets go of START before letting go of D-Pad up, then the Speed Up action will keep running as if D-Pad up was still pressed!  `noexec` isn't the default behaviour for this reason, but it could be useful in certain circumstances, like if you wanted a way to "latch" an action on or off.
 
 > [!NOTE]
-> This feature was suggested by NerdsCorp in [#2](https://github.com/atctwo/bbrx/issues/2)
+> This feature was suggested by NerdsCorp in [#2](https://github.com/atctwo/bbrx/issues/2)!
