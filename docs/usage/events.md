@@ -92,6 +92,13 @@ Check out the [config documentation](config.md#conditional-speed-control) and [e
 > In the same way that regular events do, conditional events require prior knowledge of the minimum and maximum values of their input range to process.  In a binding, you would use `min` and `max` to specify the range of a regular event.  Similarly, you can use **`conditional_min`** and **`conditional_max`** to specify the input range of conditional events.
 >
 > This allows you to mix and match ranges between regular and conditional events.  For example, your regular event could be an analog stick with a range from -511 to 512, where the conditional event could have a range of 0 to 1.
+>
+> The default values for these parameters are setup with digital inputs like buttons in mind; `conditional_min` has a default of 0, and `conditional_max` has a default of 1.  So you shouldn't have to worry about setting these values unless you're using an analog input, or an input with a range other than 0 to 1.
+
+> [!IMPORTANT]
+> **You can't mix digital and analog conditionals**
+>
+> `conditional_min` and `conditional_max` apply to all conditional input events, which means there isn't really a way to have two inputs with different ranges as conditionals.  Technically there's nothing stopping you from doing this, but inputs which don't match the conditional input range likely won't work very well.
 
 > [!TIP]
 > **What If I Don't Want The Action To Be Executed At All?**
