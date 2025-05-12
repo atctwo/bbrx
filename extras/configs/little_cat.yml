@@ -8,25 +8,27 @@ bindings:
   max: 511
   pin: 12
 
-# servo channel 2
+# servo channel 2 (normal mode, when the dual esc is mixed - both channels controlled by one stick)
+# - action: BB_ACTION_SERVO
+#   event: BB_EVENT_ANALOG_LX
+#   min: 511
+#   max: -512
+#   pin: 14
+
+# servo channel 2 (katamari mode, when the dual esc is NOT mixed - left motor = left stick)
 - action: BB_ACTION_SERVO
-  event: BB_EVENT_ANALOG_LX
-  min: 511
-  max: -512
+  event: BB_EVENT_ANALOG_RY
+  min: -512
+  max: 511
   pin: 14
 
 # weapon control
 - action: BB_ACTION_SERVO
-  event: BB_EVENT_ANALOG_BRAKE
-  min: -1024
-  max: 1023
-  pin: 7
-
-- action: BB_ACTION_SERVO
   event: BB_EVENT_ANALOG_THROTTLE
-  min: 1023
-  max: -1024
-  pin: 7
+  min: 0
+  max: 1023
+  servo_pwm_mid: 1000
+  pin: 4
 
 # speed control
 - action: BB_ACTION_SPEED_UP
