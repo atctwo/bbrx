@@ -20,6 +20,10 @@ struct bb_binding {
     uint8_t   pin;                                  // which pin to use as output
     bool      exec_without_controller;              // whether to execute the action if a controller isn't connected (with event value = 0)
     bool      ignore_claims;                        // if true, execute the bound action even if it is claimed by another binding
+    uint32_t  servo_pwm_max;                        // pwm value corresponding to the motor at full speed forwards (servo only)
+    uint32_t  servo_pwm_min;                        // pwm value corresponding to the motor at full speed backwards (servo only)
+    uint32_t  servo_pwm_mid;                        // pwm value corresponding to turning the motor off (servo only)
+    uint32_t  servo_pwm_freq;                       // frequency of the pwm output (servo only)
     std::vector<bb_event> conditionals;             // array of events which must evaluate as true before the action can be called
     int32_t   conditional_min;                      // minimum value of the range of inputs that the conditional event(s) could have
     int32_t   conditional_max;                      // maximum value of the range of inputs that the conditional event(s) could have

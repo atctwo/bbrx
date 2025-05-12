@@ -332,6 +332,74 @@ bool parse_config(std::string yaml) {
 
 
                 //------------------------
+                // check for servo_pwm_max key
+                //------------------------
+
+                if (check_key(bind, "servo_pwm_max", fkyaml::node::node_t::INTEGER)) {
+
+                    // get servo_pwm_max as an int
+                    int servo_pwm_max = bind["servo_pwm_max"].get_value<int>();
+                    logd(LOG_TAG, "- servo_pwm_max int %d", servo_pwm_max);
+                    bin.servo_pwm_max = servo_pwm_max;
+
+                } else {
+                    logd(LOG_TAG, "- missing or invalid servo_pwm_max key");
+                    bin.servo_pwm_max = ESC_PWM_MAX;
+                }
+
+
+                //------------------------
+                // check for servo_pwm_min key
+                //------------------------
+
+                if (check_key(bind, "servo_pwm_min", fkyaml::node::node_t::INTEGER)) {
+
+                    // get servo_pwm_min as an int
+                    int servo_pwm_min = bind["servo_pwm_min"].get_value<int>();
+                    logd(LOG_TAG, "- servo_pwm_min int %d", servo_pwm_min);
+                    bin.servo_pwm_min = servo_pwm_min;
+
+                } else {
+                    logd(LOG_TAG, "- missing or invalid servo_pwm_min key");
+                    bin.servo_pwm_min = ESC_PWM_MIN;
+                }
+
+
+                //------------------------
+                // check for servo_pwm_mid key
+                //------------------------
+
+                if (check_key(bind, "servo_pwm_mid", fkyaml::node::node_t::INTEGER)) {
+
+                    // get servo_pwm_mid as an int
+                    int servo_pwm_mid = bind["servo_pwm_mid"].get_value<int>();
+                    logd(LOG_TAG, "- servo_pwm_mid int %d", servo_pwm_mid);
+                    bin.servo_pwm_mid = servo_pwm_mid;
+
+                } else {
+                    logd(LOG_TAG, "- missing or invalid servo_pwm_mid key");
+                    bin.servo_pwm_mid = ESC_PWM_MID;
+                }
+
+
+                //------------------------
+                // check for servo_pwm_freq key
+                //------------------------
+
+                if (check_key(bind, "servo_pwm_freq", fkyaml::node::node_t::INTEGER)) {
+
+                    // get servo_pwm_freq as an int
+                    int servo_pwm_freq = bind["servo_pwm_freq"].get_value<int>();
+                    logd(LOG_TAG, "- servo_pwm_freq int %d", servo_pwm_freq);
+                    bin.servo_pwm_freq = servo_pwm_freq;
+
+                } else {
+                    logd(LOG_TAG, "- missing or invalid servo_pwm_freq key");
+                    bin.servo_pwm_freq = ESC_PWM_FREQ;
+                }
+
+
+                //------------------------
                 // check for pin key
                 //------------------------
 

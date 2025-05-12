@@ -63,8 +63,8 @@ void initialise_binding(bb_binding b) {
     // if a pin is registered for a servo action, create a servo object for that pin
     if (b.action == BB_ACTION_SERVO) {
         Servo *servo = new Servo();
-        servo->setPeriodHertz(ESC_PWM_FREQ);
-        servo->attach(b.pin, ESC_PWM_MIN, ESC_PWM_MAX);
+        servo->setPeriodHertz(b.servo_pwm_freq);
+        servo->attach(b.pin, b.servo_pwm_min, b.servo_pwm_max);
         servos[b.pin] = *servo;
     }
 
@@ -183,11 +183,11 @@ void perform_action(int32_t event_value, bb_binding bind, ControllerPtr controll
 
         case BB_ACTION_SERVO:
 
-            out = map(event_value, bind.min, bind.max, ESC_PWM_MIN + speed_limit, ESC_PWM_MAX - speed_limit);
+            out = map(event_value, bind.min, bind.max, bind.servo_pwm_min + speed_limit, bind.servo_pwm_max - speed_limit);
             logv(LOG_TAG, "servo out: raw: %d, scaled: %d", event_value, out);
             
             // write channel output
-            if (brake) servos[bind.pin].writeMicroseconds(ESC_PWM_MID);
+            if (brake) servos[bind.pin].writeMicroseconds(bind.servo_pwm_mid);
             else       servos[bind.pin].writeMicroseconds(out);
 
 
@@ -205,14 +205,14 @@ void perform_action(int32_t event_value, bb_binding bind, ControllerPtr controll
             // logv(LOG_TAG, "im tired value=%d min=%d max=%d", event_value, bind.min, bind.max);
             if (event_value > ((bind.max - bind.min) / 2) + bind.min) {
                 speed_limit++;
-                if (speed_limit > (ESC_PWM_MAX-ESC_PWM_MIN)/2) speed_limit = (ESC_PWM_MAX-ESC_PWM_MIN)/2;
+                if (speed_limit > (bind.servo_pwm_max-bind.servo_pwm_min)/2) speed_limit = (bind.servo_pwm_max-bind.servo_pwm_min)/2;
                 logi(LOG_TAG, "Increasing speed restriction to %d", speed_limit);
             }
             break;
 
         case BB_ACTION_SPEED_SET:
 
-            out = map(event_value, bind.min, bind.max, 0, (ESC_PWM_MAX-ESC_PWM_MIN)/2);
+            out = map(event_value, bind.min, bind.max, 0, (bind.servo_pwm_max-bind.servo_pwm_min)/2);
             logv(LOG_TAG, "speed set: raw: %d, scaled: %d", event_value, out);
             speed_limit = out;
             break;
@@ -356,17 +356,21 @@ void event_manager_update() {
     // if no controllers are connected
     if (!controller_connected()) {
 
-        // Failsafe: kill motors when nothing is connected
-        #if defined(ENABLE_FAILSAFES) and defined(FAILSAFE_NO_CONTROLLER)
+        // for each binding
+        for (uint16_t bind_id = 0; bind_id < bindings.size(); bind_id++) {
 
-            // for each servo {don't}
-            for (auto it = servos.begin(); it != servos.end(); ++it) {
+            // get reference to binding object
+            bb_binding &bind = bindings[bind_id];
 
-                // write midpoint value to each servo motor (ie: turn it off)
-                it->second.writeMicroseconds(ESC_PWM_MID);
-            }
+            // Failsafe: kill motors when nothing is connected
+            #if defined(ENABLE_FAILSAFES) and defined(FAILSAFE_NO_CONTROLLER)
+                if (bind.action == BB_ACTION_SERVO) {
+                    // write midpoint value to each servo motor (ie: turn it off)
+                    servos[bind.pin].writeMicroseconds(bind.servo_pwm_min);
+                }
+            #endif
 
-        #endif
+        }
 
     }
 
