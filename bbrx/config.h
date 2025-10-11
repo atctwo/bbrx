@@ -102,3 +102,13 @@ extern int32_t BEEFZONE_THROTTLE;   // outer deadzone for the analog throttle (R
 #define STATUS_NUM_LEDS             1
 #define STATUS_LED_TYPE             NEOPIXEL
 #define STATUS_LED_INIT_BRIGHTNESS  35
+
+//-------------------------------------------
+// WiFi & Web Server Configuration
+//-------------------------------------------
+
+#define ENABLE_WEB_SERVER               // Comment this out to disable web server
+#define WIFI_SSID       "BBRX-Config"  // AP mode SSID
+#define WIFI_PASSWORD   "bbrx1234"     // AP mode password (min 8 chars)
+#define WEB_SERVER_PORT 80              // Web server port
+#define AP_MODE_ENABLED true            // Set to false to use STA mode
