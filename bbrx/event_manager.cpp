@@ -366,7 +366,7 @@ void event_manager_update() {
             #if defined(ENABLE_FAILSAFES) and defined(FAILSAFE_NO_CONTROLLER)
                 if (bind.action == BB_ACTION_SERVO) {
                     // write midpoint value to each servo motor (ie: turn it off)
-                    servos[bind.pin].writeMicroseconds(bind.servo_pwm_min);
+                    servos[bind.pin].writeMicroseconds(bind.servo_pwm_mid);
                 }
             #endif
 
