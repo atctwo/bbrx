@@ -71,6 +71,7 @@ bool load_config();
 extern std::vector<bb_binding> bindings;
 
 // Deadzones and Beefzones
+// these are specified in config.yml but defaults are in config.cpp!
 // each binding specifies a minimum and maximum value for the input range
 // deadzone is the value below which the input defaults to 0
 // beefzone is the value above which the input defaults to max(range_min, range_max), _and_
@@ -96,9 +97,16 @@ extern int32_t BEEFZONE_THROTTLE;   // outer deadzone for the analog throttle (R
 // Status LED
 //-------------------------------------------
 
+// global enable for status LED
 #define STATUS_LED_ENABLE
-#define STATUS_LED_PIN              5
-// #define STATUS_LED_POWER_PIN        8        // please make sure this doesn't conflict with anything else because it will be pulled high for the duration of the program
-#define STATUS_NUM_LEDS             1
+
+// what type of LED to address
 #define STATUS_LED_TYPE             NEOPIXEL
-#define STATUS_LED_INIT_BRIGHTNESS  35
+
+// default brightness (unless brightness is specified in config.yml)
+#define STATUS_LED_INIT_BRIGHTNESS 35
+
+// the following settings have defaults in config.cpp, but these are overriden
+// when loading config.yml
+extern int32_t STATUS_LED_PIN;
+extern int32_t STATUS_LED_POWER_PIN; // please make sure this doesn't conflict with anything else because it will be pulled high for the duration of the program

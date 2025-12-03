@@ -21,14 +21,14 @@ void setup() {
     #endif
     logi(LOG_TAG, "");
 
-    // setup the status led
-    leds_setup();
-    leds_set_state(LED_LOADING);
-
     // this will load the user config from the configured filesystem
     // (or will just leave the defaults if this fails).
     // either way, once this function finishes, a bindset will be set up but not initialised
     load_config();
+
+    // setup the status led
+    leds_setup();
+    leds_set_state(LED_LOADING);
 
     // setup controller library
     controller_setup();

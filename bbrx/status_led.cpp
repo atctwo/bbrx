@@ -6,6 +6,7 @@
 #include "config.h"
 #include "status_led.h"
 
+#define STATUS_NUM_LEDS 1
 #define LOG_TAG "status"
 bool are_leds_setup = false;
 CRGB leds[STATUS_NUM_LEDS];

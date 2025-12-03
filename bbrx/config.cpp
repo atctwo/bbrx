@@ -38,6 +38,12 @@ int32_t BEEFZONE_BRAKE      = 1000;    // outer deadzone for the analog brake (L
 int32_t DEADZONE_THROTTLE   = 64;      // inner deadzone for the analog throttle (R2)
 int32_t BEEFZONE_THROTTLE   = 1000;    // outer deadzone for the analog throttle (R2)
 
+
+int32_t STATUS_LED_PIN             = 5;
+int32_t STATUS_LED_POWER_PIN       = -1;
+
+
+
 /**
  * @brief A vector containing all currently registered bindings.
  * 
@@ -111,6 +117,34 @@ bool parse_config(std::string yaml) {
             logd(LOG_TAG, "config test string: %s", test.c_str());
         }
 
+
+        // get status led object
+        if (check_key(root, "statusled", fkyaml::node::node_t::MAPPING)) {
+
+            logd(LOG_TAG, "loading status led settings...");
+            auto &statusled = root["statusled"];
+
+            if (check_key(statusled, "pin", fkyaml::node::node_t::INTEGER)) {
+                STATUS_LED_PIN = statusled["pin"].get_value<int32_t>();
+                logd(LOG_TAG, "- pin = %d", DEADZONE_LY);
+            } else logd(LOG_TAG, "- couldn't get pin");
+
+            if (check_key(statusled, "power_pin", fkyaml::node::node_t::INTEGER)) {
+                STATUS_LED_POWER_PIN = statusled["power_pin"].get_value<int32_t>();
+                logd(LOG_TAG, "- power_pin = %d", DEADZONE_LY);
+            } else logd(LOG_TAG, "- couldn't get power_pin");
+
+            if (check_key(statusled, "brightness", fkyaml::node::node_t::INTEGER)) {
+                // statusled["brightness"].get_value<int32_t>();
+                logd(LOG_TAG, "- brightness = %d", DEADZONE_LY);
+            } else logd(LOG_TAG, "- couldn't get brightness");
+
+            // newline
+            logd(LOG_TAG, "");
+
+        } else {
+            logd(LOG_TAG, "failed to load status led settings, disabling status led");
+        }
 
         // get deadzones object
         if (check_key(root, "deadzones", fkyaml::node::node_t::MAPPING)) {

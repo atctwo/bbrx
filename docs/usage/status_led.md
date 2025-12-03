@@ -15,9 +15,11 @@ Here are the colours which the LED can show, and what they mean:
 | Red       | No      | The brake is engaged                             |
 
 ## Configuration
-The settings for the status LED are defined in [`config.h`](../../bbrx/config.h#L90), around line 90 at the time of writing.  The currently supported settings are:
-- `STATUS_LED_PIN`: the pin to use for LED output
-- `STATUS_LED_POWER_PIN`: if defined, this pin will be pulled high.  this exists because some boards with built-in RGB LEDs use a GPIO to power the LED
-- `STATUS_NUM_LEDS`: the number of LEDs in the chain.  for now, bbrx doesn't actually use anything other than the first one for status
+The status LED can be configured using the `statusled` object in [`config.yml`](./config.md).  The status LED will be disabled unless this object exists.  Defaults for the settings for the status LED are defined in [`config.cpp`](../../bbrx/config.cpp), but these are overridden when `config.yml` is loaded.
+
+The currently supported settings (as child keys of `statusled`) are:
+- `pin`: the pin to use for LED output
+- `power_pin`: if defined, this pin will be pulled high.  this exists because some boards with built-in RGB LEDs use a GPIO to power the LED
+- `num_leds`: the number of LEDs in the chain.  for now, bbrx doesn't actually use anything other than the first one for status
 - `STATUS_LED_TYPE`: which type of LED driver you are using.  please refer to [fastled's chipset reference](https://github.com/FastLED/FastLED/wiki/Chipset-reference) for details on what chipsets / drivers are supported
-- `STATUS_LED_INIT_BRIGHTNESS`: the initial brightness of the LED.  the brightness can be changed at runtime using a function in `status_led.cpp` but that isn't actually used at the time of writing
+- `init_brightness`: the initial brightness of the LED.  the brightness can be changed at runtime using a function in `status_led.cpp` but that isn't actually used at the time of writing

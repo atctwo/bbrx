@@ -113,6 +113,9 @@ Please also note that the values for each key are expected to be of certain data
 
 If any property does not match it's expected data type, it won't be included in the binding definition.  If any required properties are missing or fail to parse, then the entire binding will not be registered.
 
+## Status LED
+bbrx supports a RGB status LED to show the current connection / brake state.  Please refer to the [Status LED documentation](./status_led.md) for more info!  Please note that the status LED will be inactive unless the top-level `statusled` object exists. 
+
 ### Example Bindings
 #### Basic ESC Control with left analog stick
 This example assumes you have an ESC which takes in two servo PWM channels to control the speed and direction of a few motors.  It binds the Y axis of the left analog stick to pin 12 ("channel 1") and the X axis to pin 13 ("channel 2"), allowing you to use the left stick to control the speed and direction of the motors.
