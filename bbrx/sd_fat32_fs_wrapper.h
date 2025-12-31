@@ -2,7 +2,7 @@
 
 // thingy to get SdFat to work with fs::FS functions
 // from https://github.com/greiman/SdFat/issues/471#issuecomment-2001960350
-// works with SdFat@2.2.2, but not with SdFat@2.2.3
+// works with SdFat@2.2.2, but not with SdFat@2.2.3 ==fixed
 
 #include <FS.h>
 #include <FSImpl.h>
@@ -32,7 +32,7 @@ class SdFatFile32Impl : public fs::FileImpl
 private: 
     mutable FsFile _file; 
 public:
-    SdFatFile32Impl(FsFile file) : _file(file) {}
+    SdFatFile32Impl(FsFile&& file) : _file(std::move(file)) {}
 
     virtual ~SdFatFile32Impl() { }
 

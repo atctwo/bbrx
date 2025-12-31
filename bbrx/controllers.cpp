@@ -4,6 +4,10 @@
 #include "log.h"
 #include "config.h"
 
+#ifdef ENABLE_WEB_SERVER
+#include "feedback.h"
+#endif
+
 #define LOG_TAG "controller"
 
 ControllerPtr controller;
@@ -36,6 +40,11 @@ void controller_callback_connected(ControllerPtr ctl) {
         // set LED colour
         ctl->setColorLED(0x00, 0xCE, 0xD1);
 
+#ifdef ENABLE_WEB_SERVER
+        // Play connection success feedback
+        ControllerFeedback::effectConnectionSuccess(ctl);
+#endif
+
         // set status led
         leds_set_state(LED_CONNECTED);
 
@@ -56,6 +65,13 @@ void controller_callback_disconnected(ControllerPtr ctl) {
 
     if (ctl == controller) {
         logi(LOG_TAG, "Controller disconnected!");
+        
+#ifdef ENABLE_WEB_SERVER
+        // Play disconnection feedback before clearing
+        ControllerFeedback::effectConnectionLost(ctl);
+        delay(200); // Brief delay for feedback to register
+#endif
+        
         controller = nullptr;
 
         // set status led
